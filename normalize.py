@@ -453,29 +453,31 @@ class NyulNormalizer:
 
 
 if __name__ == "__main__":
+    # To run: python 1-normalization/normalize.py Data/P_Soenke/ T1
     # sys.argv[1]: data location where .nii files
-    location = './Data/PSI_Nii/'
+    # location = './Data/PSI_Nii/'
+    # location = './Data/P_Soenke/'
     # sys.argv[2]: data sequence
-    sequence = 'T2'
+    # sequence = 'T1'
 
     #here create output folder
     # directory = './Output'
     # if not os.path.exists(directory):
     #     os.makedirs(directory)
         
-    directory = './Output/Normalisation_Soenke'
+    directory = './Output/Normalization_Soenke'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    directory = './Output/Normalisation_Soenke/BiasField'
+    directory = './Output/Normalization_Soenke/BiasField'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    directory = './Output/Normalisation_Soenke/nyulModel'
+    directory = './Output/Normalization_Soenke/nyulModel'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    directory = './Output/Normalisation_Soenke/Normalisation'
+    directory = './Output/Normalization_Soenke/Normalization'
     if not os.path.exists(directory):
         os.makedirs(directory)
         
