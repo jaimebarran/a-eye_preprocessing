@@ -29,7 +29,7 @@ def loop_or(len):
     return output
 #############################  
 
-input_directory = '../../../1_Soenke_Segmentation/Fats/'
+input_directory = '../../../1_Soenke_Segmentation/NIFTI/'
 output_directory = '../../../1_Soenke_Segmentation/Output/'
 output_filename = 'fats.nii'
 
@@ -45,24 +45,8 @@ for filename in os.listdir(input_directory):
         # img_array = sitk.GetArrayViewFromImage(img)
         minVal = np.amin(img_array)
         maxVal = np.amax(img_array)
-        # print(f"{filename}: {img_array.shape}")
-        # print(f"Intensities: min = {minVal}, max = {maxVal} \n")
+        print(f"{filename}: {img_array.shape}")
+        print(f"Intensities: min = {minVal}, max = {maxVal} \n")
         img_array_norm['img%s' %i] = img_array / maxVal # normalized intensities
         # print(np.count_nonzero(img_array_norm['img%s' %i] == 1)) # How many positive values the array has
     i += 1
-
-output_array_norm = loop_or(len(img_array_norm)) # 3. Dilation: recursive or (when having more than 2 arrays)
-
-# output_array_norm_true = np.where(output_array_norm) # truth matrix
-# print(output_array_norm_true)
-
-output_array_norm = output_array_norm.astype(float)
-# print(np.count_nonzero(output_array_norm == 1)) # How many positive values the array has
-
-
-image_norm_reco = sitk.GetImageFromArray(output_array_norm) # 4. Image reconstruction
-
-if not os.path.exists(output_directory):
-    os.makedirs(output_directory)
-output_filename = os.path.join(output_directory, output_filename)
-sitk.WriteImage(image_norm_reco, output_filename)
