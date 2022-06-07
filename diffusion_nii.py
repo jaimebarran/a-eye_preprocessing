@@ -10,28 +10,27 @@ import numpy as np
 # Steps
 # 1. Load .nii images
 # 2. Decompose .nii images into arrays
-# 3. OR pixels (dilation)
+# 3. OR pixels (diffusion)
 # 4. Reconstruct .nii image
 
 ### Additional funtions ###
 def loop_or(len):
 
-    j = 0
+    j = 2 # minimum .nii images required
     arr1 = img_array_norm['img%s' %0]
     arr2 = img_array_norm['img%s' %1]
     
-    while j < len-1:
+    while j < len:
         output = np.logical_or(arr1, arr2)
         arr1 = output
-        if j > (len-2):
-            arr2 = img_array_norm['img%s' %(j+2)]
+        arr2 = img_array_norm['img%s' %(j)]
         j += 1
     return output
 #############################  
 
-input_directory = '../../../1_Soenke_Segmentation/Fats/'
-output_directory = '../../../1_Soenke_Segmentation/Output/'
-output_filename = 'fats.nii'
+input_directory = '../../../1_Soenke_Segmentation/input_niis/'
+output_directory = '../../../1_Soenke_Segmentation/output_niis/'
+output_filename = 'GT.nii'
 
 # File loop
 i = 0 # to name each read image
@@ -51,7 +50,7 @@ for filename in os.listdir(input_directory):
         # print(np.count_nonzero(img_array_norm['img%s' %i] == 1)) # How many positive values the array has
     i += 1
 
-output_array_norm = loop_or(len(img_array_norm)) # 3. Dilation: recursive or (when having more than 2 arrays)
+output_array_norm = loop_or(len(img_array_norm)) # 3. Diffusion: recursive
 
 # output_array_norm_true = np.where(output_array_norm) # truth matrix
 # print(output_array_norm_true)
