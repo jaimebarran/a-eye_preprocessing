@@ -5,6 +5,8 @@ import SimpleITK as sitk
 import pandas as pd
 #import getEyeCenter
 
+# bash command
+# $ bash /opt/ANTs/bin/antsBrainExtraction.sh -d 3 -a ../input/tpl-MNIColin27_T1w_cropEye.nii.gz -e ../input/SoenkeSample_cropEye.nii.gz -m ../input/tpl-MNIColin27_desc-brain_mask.nii.gz -o output -k 1
 
 def cropVolumeImage(image,x,y,z,border1,border2,border3):
     
@@ -52,9 +54,8 @@ if __name__ == "__main__":
     df = pd.read_csv(csv_path)
     for i, item in df.iterrows():
         if (item[0][0:1]=="E") or(item[0][0:1]=="P"):
-            
             if(numpy.isnan(item[1]) == False):
-                mriFile  = "/T1.nii"
+                mriFile  = "/T1.nii.gz"
                 x = item[1]
                 y = item[2]
                 z = item[3]
@@ -62,7 +63,7 @@ if __name__ == "__main__":
                 # image = sitk.ReadImage(sys.argv[1]+item[0]+mriFile)
                 image = sitk.ReadImage(sys.argv[1]+mriFile)
                 # directory = "./Output/OnlyEyeRegion/"+item[0]
-                directory = "./Output/OnlyEyeRegion_Soenke/"+item[0]
+                directory = "./Output/OnlyEyeRegion/"+item[0]
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 binaryImage = cropVolumeImage(image,x,y,z,64,64,64)

@@ -60,7 +60,7 @@ def doAnisoAndBiascorrection(binaryName,i):
 
             output = corrector.Execute( inputImage, maskImage )    
 
-            biasName =  "./Output/Normalisation_Soenke/BiasField/biasfield"+str(i)+".nii"
+            biasName =  "./Output/Normalization_Soenke/BiasField/biasfield"+str(i)+".nii"
             sitk.WriteImage( output,  biasName)
             
             return biasName
@@ -84,7 +84,7 @@ def normalize(location, Modality):
                 listFiles.append(biasName)
                 i= i+1      
         print("do Nyul model")
-        outputModel = './Output/Normalisation_Soenke/nyulModel/nyulModel'+Modality
+        outputModel = './Output/Normalization_Soenke/nyulModel/nyulModel'+Modality
 
         nyul = NyulNormalizer()
         
@@ -98,7 +98,7 @@ def normalize(location, Modality):
                 image = sitk.ReadImage(imageName)
                 transformedImage = nyul.transform(image)
                 
-                directory = './Output/Normalisation_Soenke/Normalisation/'+p.parts[2]+'/'
+                directory = './Output/Normalization_Soenke/Normalization/'+p.parts[2]+'/'
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 outputfilename = os.path.join(directory,filename)
@@ -268,7 +268,7 @@ class NyulNormalizer:
             
                 [lm_p1, lm_p25, lm_p50, lm_p75, lm_p99]
 
-            :param listOfImages Images used to learn the distribution of ladnmarks. It's a list of strings, where every element is the full path to an image.
+            :param listOfImages Images used to learn the distribution of landmarks. It's a list of strings, where every element is the full path to an image.
             :param listOfMasks  [OPTIONAL] Masks used to compute the histogram of the corresponding images. If masks are provided, the histograms will be computed
                                 taking into account only those voxels where mask > 1. len(listOfMasks) == len(listOfImages). It is list of strings, where every element
                                 is the full path to an image.

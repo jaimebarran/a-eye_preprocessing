@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # Custom folders/files to ignore
-Data/
+ANTs/
 Output/
