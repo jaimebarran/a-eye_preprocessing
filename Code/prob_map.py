@@ -11,7 +11,8 @@ output_dir = '/mnt/sda1/ANTs/'
 colin_path = '/mnt/sda1/ANTs/input/colin27/tpl-MNIColin27_T1w.nii.gz'
 mask_path = '/mnt/sda1/ANTs/all_segments_mask.nii.gz'
 
-num_subjects = 35
+num_subjects = 35 # number of subjects
+threshold = 0.3 # to compute the probabilities
 
 im_colin = sitk.ReadImage(colin_path)
 im_mask = sitk.ReadImage(mask_path)
@@ -47,8 +48,8 @@ for x in range(bounding_box[0], bounding_box[1]+1):
             if np.any(arr): # check if array has any nonzero value
                 for j in range(len(prob)):
                     prob[j] = np.count_nonzero(arr ==  j+1) / len(arr) # Array of probabilities for each class
-                prob_matrix[x,y,z] = np.argmax(prob)+1 # Most likely class between 1 and 9
-            else: 
+                prob_matrix[x,y,z] = np.argmax(prob)+1 if np.amax(prob) > threshold else 0 # Most likely class between 1 and 9
+            else:
                 prob_matrix[x,y,z] = 0 # Background
             # prob = len(arr_non_zero == most_frequent)/len(arr)
             # matrix[x,y,z] = np.argmax(prob)
@@ -56,4 +57,4 @@ for x in range(bounding_box[0], bounding_box[1]+1):
 # Probability map representation
 # nii = nb.Nifti1Image(matrix, segments[0].affine, header)
 nii = nb.Nifti1Image(prob_matrix, segments[0].affine, header)
-nii.to_filename(output_dir+"prob_map_max.nii.gz")
+nii.to_filename(output_dir+"prob_map_th"+str(int(threshold*100))+".nii.gz")
