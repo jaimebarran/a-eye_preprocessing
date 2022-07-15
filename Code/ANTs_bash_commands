@@ -75,9 +75,17 @@ $ antsApplyTransforms -d 3  -r /mnt/sda1/ANTs/a123/sub-01/input/tpl-MNIColin27_T
 
 
 
++------------------------+
+| MeasureImageSimilarity |
++------------------------+
 
+-Cross Correlation:
 
+$ MeasureImageSimilarity -d 3 -m CC["/mnt/sda1/Repos/a-eye/Data/templateflow/colin27/tpl-MNIColin27_T1w.nii.gz", "/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/sub-01/output_colin27/BrainExtractionNormalized.nii.gz", 1, 10, None, 1] -v 1
 
+- Demons:
+
+$ MeasureImageSimilarity -d 3 -m Demons["/mnt/sda1/Repos/a-eye/Data/templateflow/colin27/tpl-MNIColin27_T1w.nii.gz", "/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/sub-01/output_colin27/BrainExtractionNormalized.nii.gz", 1] -v 1
 
 
 

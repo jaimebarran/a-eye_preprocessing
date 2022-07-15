@@ -6,13 +6,14 @@ import os
 from pathlib import Path
 from scipy.stats import mode
 
-base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/'
+base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects/'
 output_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/Output/'
 colin_path = '/mnt/sda1/Repos/a-eye/Data/templateflow/colin27/tpl-MNIColin27_T1w.nii.gz'
 mask_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/Output/all_segments_mask.nii.gz'
 
-num_subjects = 35 # number of subjects
-threshold = 5/num_subjects # to compute the probabilities
+num_subjects = 5 # number of subjects
+list_subjects = ['sub-01','sub-02','sub-03','sub-06','sub-11']
+threshold = 3/num_subjects # to compute the probabilities
 
 im_colin = sitk.ReadImage(colin_path)
 im_mask = sitk.ReadImage(mask_path)
@@ -57,5 +58,5 @@ for x in range(bounding_box[0], bounding_box[1]+1):
 
 # Probability map representation
 # nii = nb.Nifti1Image(matrix, segments[0].affine, header)
-# nii = nb.Nifti1Image(prob_matrix, segments[0].affine, header)
-# nii.to_filename(output_dir+"prob_map_th"+str(int(threshold*100))+".nii.gz")
+nii = nb.Nifti1Image(prob_matrix, segments[0].affine, header)
+nii.to_filename(base_dir+"prob_map_th"+str(int(threshold*100))+".nii.gz")
