@@ -1,21 +1,42 @@
 import os
 
-base_dir = '/mnt/sda1/ANTs/a123/'
-ref_mni152 = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_T1w.nii.gz'
-ref_colin27 = '/mnt/sda1/ANTs/input/colin27/tpl-MNIColin27_T1w.nii.gz'
-eye_mask_mni = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_desc-eye_mask.nii.gz'
+base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/'
+# ref_mni152 = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_T1w.nii.gz'
+# ref_colin27 = '/mnt/sda1/ANTs/input/colin27/tpl-MNIColin27_T1w.nii.gz'
+# eye_mask_mni = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_desc-eye_mask.nii.gz'
+# template_cc = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0.nii.gz'
+template_cc_cropped = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/template0_cropped_15vox.nii.gz'
 
+# List of best subjects to do the registration
+# best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
+# best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-30','sub-33','sub-34'] # 7
+best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+
+# List of remaining subjects
+all_subjects = list()
+for i in range(35):
+    all_subjects.append('sub-'+str(i+1).zfill(2))
+rest_subjects = [elem for elem in all_subjects if elem not in best_subjects_cc]
+# print(rest_subjects)
+
+# List of worst subjects
+# best_subjects_cc = ['sub-15','sub-19','sub-21','sub-23','sub-26']
+# worst_subjects_cc = ['sub-15','sub-19','sub-21','sub-23','sub-26','sub-17','sub-16','sub-28','sub-10'] # 9
+
+''' Loop for best subjects
+j = 0
 # antsEyeExtraction and antsApplyTransforms
-for folder1 in os.listdir(base_dir):
-    # print(folder1)
-    input_t1 = base_dir + folder1 + '/input/' + folder1 + '_T1.nii.gz'
-    input_labels = base_dir + folder1 + '/input/' + folder1 + '_labels.nii.gz'
-    input_t1_cropped = base_dir + folder1 + '/input/' + folder1 + '_T1_cropped.nii.gz'
-    input_labels_cropped = base_dir + folder1 + '/input/' + folder1 + '_labels_cropped.nii.gz'
-    ref_mni152_cropped = base_dir + folder1 + '/input/' + 'tpl-MNI152NLin2009cAsym_res-01_T1w_cropped.nii.gz'
-    ref_colin27_cropped = base_dir + folder1 + '/input/' + 'tpl-MNIColin27_T1w_cropped.nii.gz'
-    output = base_dir + folder1 + '/output_colin27_cropped/' # Change this when doing new extractions
-    # os.makedirs(output)
+for i in range(len(best_subjects_cc)):
+    # input_t1 = base_dir + 'best_subjects_eye_cc/' + best_subjects_cc[i] + '_T1_aff.nii.gz'
+    # input_labels = base_dir + 'a123/' + best_subjects_cc[i] + '/input/' + best_subjects_cc[i] + '_labels.nii.gz'
+    input_t1_cropped = base_dir + 'a123/' + best_subjects_cc[i] + '/input/' + best_subjects_cc[i] + '_T1_cropped.nii.gz'
+    input_labels_cropped = base_dir + 'a123/' + best_subjects_cc[i] + '/input/' + best_subjects_cc[i] + '_labels_cropped.nii.gz'
+    # ref_mni152_cropped = base_dir + best_subjects_cc[i] + '/input/' + 'tpl-MNI152NLin2009cAsym_res-01_T1w_cropped.nii.gz'
+    # ref_colin27_cropped = base_dir + best_subjects_cc[i] + '/input/' + 'tpl-MNIColin27_T1w_cropped.nii.gz'
+    output = base_dir +  'best_subjects_eye_cc/CustomTemplate_9_n1/' # Change this when doing new extractions
+    output_reg_cropped_path = output + 'reg_cropped_best_subjects/' + best_subjects_cc[i] + '_reg_cropped/'
+    if not os.path.exists(output_reg_cropped_path):
+        os.makedirs(output_reg_cropped_path)
 
     # Brain extraction (only to test)
     # command1 = 'antsBrainExtraction.sh -d 3' + \
@@ -29,44 +50,84 @@ for folder1 in os.listdir(base_dir):
 
     # Eye extraction
     # command1 = 'antsEyeExtraction.sh -d 3' + \
-    # ' -a ' + input_t1     + \
-    # ' -e ' + ref_colin27  + \
-    # ' -f ' + eye_mask_mni + \
-    # ' -g ' + input_labels + \
-    # ' -o ' + output       + \
+    # ' -a ' + input_t1                      + \
+    # ' -e ' + template_cc                   + \
+    # ' -f ' + eye_mask_mni                  + \
+    # ' -g ' + input_labels                  + \
+    # ' -o ' + output                        + \
     # ' -k ' + '1' # 1 = keep temporary files, 0 = remove them
     # print(command1)
     # os.system(command1)
 
     # ApplyTransforms
-    # command2 = 'antsApplyTransforms -d 3 '                                + \
-    # ' -i ' +  input_labels                                                + \
-    # ' -o ' +  output + 'all_segments_template.nii.gz'                     + \
-    # ' -r ' +  ref_colin27                                                 + \
+    # command2 = 'antsApplyTransforms -d 3' + \
+    # ' -i ' +  input_labels + \
+    # ' -o ' +  output + best_subjects_cc[i] +'_labels2template5.nii.gz' + \
+    # ' -r ' +  template_cc + \
     # ' -n ' + 'MultiLabel' + \
-    # ' -t ' + '[' + output + 'BrainExtractionPrior0GenericAffine.mat, 0 ]' + \
-    # ' -t ' + output + 'BrainExtractionPrior1Warp.nii.gz'                  + \
+    # ' -t ' + '[' + output + best_subjects_cc[i] + '_T1_aff' + str(j).zfill(2) + 'GenericAffine.mat, 0 ]' + \
+    # ' -t ' + output + best_subjects_cc[i] + '_T1_aff' + str(j+1).zfill(2) + 'Warp.nii.gz' + \
     # ' --float 0 --verbose 1'
     # print(command2)
     # os.system(command2)
+    # j += 10
 
     # antsRegistrationSyN (for cropped images)
     command1 = 'antsRegistrationSyN.sh -d 3' + \
     ' -m ' + input_t1_cropped   + \
-    ' -f ' + ref_colin27_cropped + \
+    ' -f ' + template_cc_cropped + \
     ' -t ' + 's'                + \
-    ' -o ' + output
-    print(command1)
+    ' -o ' + output_reg_cropped_path
+    # print(command1)
+    os.system(command1)
+
+    # # ApplyTransforms (for cropped images)
+    command2 = 'antsApplyTransforms -d 3 ' + \
+    ' -i ' +  input_labels_cropped + \
+    ' -o ' +  output_reg_cropped_path + 'labels2template.nii.gz' + \
+    ' -r ' +  template_cc_cropped + \
+    ' -n ' + 'MultiLabel' + \
+    ' -t ' + '[' + output_reg_cropped_path + '0GenericAffine.mat, 0 ]' + \
+    ' -t ' + output_reg_cropped_path + '1Warp.nii.gz' + \
+    ' --float 0 --verbose 1'
+    # print(command2)
+    os.system(command2)
+'''
+
+# ''' Loop for the rest of the subjects
+# antsRegistrationSyN and antsApplyTransforms
+for i in range(len(rest_subjects)):
+    # input_t1 = base_dir + 'best_subjects_eye_cc/' + best_subjects_cc[i] + '_T1_aff.nii.gz'
+    # input_labels = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels.nii.gz'
+    input_t1_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_T1_cropped.nii.gz'
+    input_labels_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels_cropped.nii.gz'
+    # template_cc_cropped = base_dir + 'best_subjects_eye_cc/CustomTemplate_5_n1/' + best_subjects_cc[i] + '_template_cropped.nii.gz'
+    # output = base_dir +  'best_subjects_eye_cc/CustomTemplate_5_n1/' # Change this when doing new extractions
+    output = base_dir +  'best_subjects_eye_cc/CustomTemplate_9_n1/' # Change this when doing new extractions
+    # output = base_dir +  'best_subjects_eye_cc/CustomTemplate_9_n1/' # Change this when doing new extractions
+    output_reg_cropped_path = output + rest_subjects[i] + '_reg_cropped/'
+    if not os.path.exists(output_reg_cropped_path):
+        os.makedirs(output_reg_cropped_path)
+    
+
+    # antsRegistrationSyN (for cropped images)
+    command1 = 'antsRegistrationSyN.sh -d 3' + \
+    ' -m ' + input_t1_cropped   + \
+    ' -f ' + template_cc_cropped + \
+    ' -t ' + 's'                + \
+    ' -o ' + output_reg_cropped_path
+    # print(command1)
     os.system(command1)
 
     # ApplyTransforms (for cropped images)
     command2 = 'antsApplyTransforms -d 3 ' + \
     ' -i ' +  input_labels_cropped + \
-    ' -o ' +  output + 'all_segments_template.nii.gz' + \
-    ' -r ' +  ref_colin27_cropped + \
+    ' -o ' +  output_reg_cropped_path + 'labels2template.nii.gz' + \
+    ' -r ' +  template_cc_cropped + \
     ' -n ' + 'MultiLabel' + \
-    ' -t ' + '[' + output + '0GenericAffine.mat, 0 ]' + \
-    ' -t ' + output + '1Warp.nii.gz' + \
+    ' -t ' + '[' + output_reg_cropped_path + '0GenericAffine.mat, 0 ]' + \
+    ' -t ' + output_reg_cropped_path + '1Warp.nii.gz' + \
     ' --float 0 --verbose 1'
-    print(command2)
+    # print(command2)
     os.system(command2)
+# '''

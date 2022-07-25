@@ -15,7 +15,7 @@ if not os.path.exists(output_dir):
 subs = [] # list
 for i in range(len(best_subjects_cc)):
     # print(i)
-    subs.append(base_dir + best_subjects_cc[i] + '/input/' + best_subjects_cc[i] + '_T1_hdr.nii.gz')
+    subs.append(base_dir + best_subjects_cc[i] + '/input/' + best_subjects_cc[i] + '_T1_aff.nii.gz')
     # print(subs[i])
 # print(subs)
 
