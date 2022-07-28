@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from scipy.stats import mode
 
-base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/'
+base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
 output_dir = base_dir+'Probability_Maps/'
 # Create output directories
 if not os.path.exists(output_dir):
@@ -16,14 +16,14 @@ if not os.path.exists(output_dir):
 # mask_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/Output/all_segments_mask.nii.gz'
 # template_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0.nii.gz'
 # mask_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/all_segments_mask.nii.gz'
-template_cropped_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/template0_cropped_15vox.nii.gz'
-mask_cropped_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/all_segments_mask_cropped.nii.gz'
+template_cropped_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0_cropped_15vox.nii.gz'
+mask_cropped_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/all_segments_mask_cropped.nii.gz'
 
-# best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
+best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-30','sub-33','sub-34'] # 7
-best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+# best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
 num_subjects = len(best_subjects_cc) # number of subjects
-threshold = 0/num_subjects # to compute the probabilities
+threshold = 2/num_subjects # to compute the probabilities
 
 im_template = sitk.ReadImage(template_cropped_path)
 im_mask = sitk.ReadImage(mask_cropped_path)
@@ -62,7 +62,7 @@ for x in range(bounding_box[0], bounding_box[1]+1):
                 for j in range(len(prob)):
                     prob[j] = np.count_nonzero(arr ==  j+1) / len(arr) # Array of probabilities for each class
                 # sum_prob = np.sum(prob) # Sum of non-zero probabilities (less than 1)
-                prob_matrix[x,y,z] = np.argmax(prob)+1 if np.amax(prob) >= threshold else 0 # Most likely class between 1 and 9 meeting a threshold
+                prob_matrix[x,y,z] = np.argmax(prob)+1 if np.amax(prob) >= threshold else 0 # Most likely class (highest probability) between 1 and 9 meeting a threshold
             else:
                 prob_matrix[x,y,z] = 0 # Background
             # prob = len(arr_non_zero == most_frequent)/len(arr)
