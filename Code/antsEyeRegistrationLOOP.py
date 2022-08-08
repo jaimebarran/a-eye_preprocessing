@@ -5,7 +5,8 @@ base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/'
 # ref_colin27 = '/mnt/sda1/ANTs/input/colin27/tpl-MNIColin27_T1w.nii.gz'
 # eye_mask_mni = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_desc-eye_mask.nii.gz'
 # template_cc = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0.nii.gz'
-template_cc_cropped = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/template0_cropped_15vox.nii.gz'
+# template_cc_cropped = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_9_n1/template0_cropped_15vox.nii.gz'
+template_cc_cropped = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_1/sub-20_T1_cropped.nii.gz'
 
 # List of best subjects to do the registration
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
@@ -102,9 +103,7 @@ for i in range(len(rest_subjects)):
     input_t1_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_T1_cropped.nii.gz'
     input_labels_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels_cropped.nii.gz'
     # template_cc_cropped = base_dir + 'best_subjects_eye_cc/CustomTemplate_5_n1/' + best_subjects_cc[i] + '_template_cropped.nii.gz'
-    # output = base_dir +  'best_subjects_eye_cc/CustomTemplate_5_n1/' # Change this when doing new extractions
-    output = base_dir +  'best_subjects_eye_cc/CustomTemplate_9_n1/' # Change this when doing new extractions
-    # output = base_dir +  'best_subjects_eye_cc/CustomTemplate_9_n1/' # Change this when doing new extractions
+    output = base_dir +  'best_subjects_eye_cc/CustomTemplate_1/' # Change this when doing new extractions
     output_reg_cropped_path = output + rest_subjects[i] + '_reg_cropped/'
     if not os.path.exists(output_reg_cropped_path):
         os.makedirs(output_reg_cropped_path)
