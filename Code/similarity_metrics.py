@@ -7,6 +7,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import Line2D
 from sqlalchemy import true
+from scipy import stats
 
 # nDSC (normalized DSC)
 def dice_norm_metric(ground_truth, predictions):
@@ -40,7 +41,7 @@ def dice_norm_metric(ground_truth, predictions):
             fnr = fn / np.sum(gt)
         return dsc_norm # fpr, fnr
 
-''' Data frame file generation
+# ''' Data frame file generation
 base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_path = base_dir + 'Probability_Maps/prob_map_cropped_th0.nii.gz' # GT
 
@@ -475,107 +476,18 @@ ax = sns.swarmplot(data=df)
 plt.show()
 '''
 
-# ''' Plot per metric
-# Paths
-# df1 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics1.csv')
-# df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5.csv')
-# df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7.csv')
-# df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9.csv')
-# Paths seperate labels
-# df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_separate_labels.csv')
-# df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_separate_labels.csv')
-# df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_separate_labels.csv')
-# Paths nDSC
-# df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC.csv')
-# df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_nDSC.csv')
-# df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_nDSC.csv')
-# Paths nDSC separate labels
-# df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_separate_labels.csv')
-# df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_nDSC_separate_labels.csv')
-# df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_nDSC_separate_labels.csv')
-# Paths {nDSC, size} separate labels
+''' Plot per metric
 df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_size_separate_labels.csv')
-# # Dataframes {DSC, Hausdorff, Volume, nDSC}
-# data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
-#             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_fats'], df7['DSC_fats'], df9['DSC_fats'], df5['DSC_muscles'], df7['DSC_muscles'], df9['DSC_muscles']]
-# data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
-#             df9['Haus_avg_globe'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df5['Haus_avg_fats'], df7['Haus_avg_fats'], df9['Haus_avg_fats'], 
-#             df5['Haus_avg_muscles'], df7['Haus_avg_muscles'], df9['Haus_avg_muscles']]
-# data_vol = [df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
-#             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_fats'], df7['Volume_fats'], df9['Volume_fats'], df5['Volume_muscles'], df7['Volume_muscles'], df9['Volume_muscles']]
-# data_ndsc = [df5['nDSC_all'], df7['nDSC_all'], df9['nDSC_all'], df5['nDSC_lens'], df7['nDSC_lens'], df9['nDSC_lens'], df5['nDSC_globe'], df7['nDSC_globe'], df9['nDSC_globe'],
-#             df5['nDSC_nerve'], df7['nDSC_nerve'], df9['nDSC_nerve'], df5['nDSC_fats'], df7['nDSC_fats'], df9['nDSC_fats'], df5['nDSC_muscles'], df7['nDSC_muscles'], df9['nDSC_muscles']]
-# # Dataframes plus N=1
-# data_dsc = [df1['DSC_all'], df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df1['DSC_lens'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df1['DSC_globe'],df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
-#             df1['DSC_nerve'], df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df1['DSC_fats'], df5['DSC_fats'], df7['DSC_fats'], df9['DSC_fats'], df1['DSC_muscles'], df5['DSC_muscles'], df7['DSC_muscles'], df9['DSC_muscles']]
-# data_haus = [df1['Haus_avg_all'], df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df1['Haus_avg_lens'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df1['Haus_avg_globe'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
-#             df9['Haus_avg_globe'], df1['Haus_avg_nerve'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df1['Haus_avg_fats'], df5['Haus_avg_fats'], df7['Haus_avg_fats'], df9['Haus_avg_fats'], 
-#             df1['Haus_avg_muscles'], df5['Haus_avg_muscles'], df7['Haus_avg_muscles'], df9['Haus_avg_muscles']]
-# data_vol = [df1['Volume_all'], df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df1['Volume_lens'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df1['Volume_globe'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
-#             df1['Volume_nerve'], df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df1['Volume_fats'], df5['Volume_fats'], df7['Volume_fats'], df9['Volume_fats'], df1['Volume_muscles'], df5['Volume_muscles'], df7['Volume_muscles'], df9['Volume_muscles']]
-# # Dataframes {DSC, Hausdorff, Volume} separate labels
-# data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
-#             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_int_fat'], df7['DSC_int_fat'], df9['DSC_int_fat'], df5['DSC_ext_fat'], df7['DSC_ext_fat'], df9['DSC_ext_fat'],
-#             df5['DSC_lat_mus'], df7['DSC_lat_mus'], df9['DSC_lat_mus'], df5['DSC_med_mus'], df7['DSC_med_mus'], df9['DSC_med_mus'], df5['DSC_inf_mus'], df7['DSC_inf_mus'], df9['DSC_inf_mus'],
-#             df5['DSC_sup_mus'], df7['DSC_sup_mus'], df9['DSC_sup_mus']]
-# data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
-#             df9['Haus_avg_globe'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df7['Haus_avg_int_fat'], df9['Haus_avg_int_fat'], 
-#             df5['Haus_avg_ext_fat'], df7['Haus_avg_ext_fat'], df9['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df7['Haus_avg_lat_mus'], df9['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], 
-#             df7['Haus_avg_med_mus'], df9['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df7['Haus_avg_inf_mus'], df9['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus'], df7['Haus_avg_sup_mus'], df9['Haus_avg_sup_mus']]
-# data_vol = [df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
-#             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_int_fat'], df7['Volume_int_fat'], df9['Volume_int_fat'], df5['Volume_ext_fat'], df7['Volume_ext_fat'], df9['Volume_ext_fat'],
-#             df5['Volume_lat_mus'], df7['Volume_lat_mus'], df9['Volume_lat_mus'], df5['Volume_med_mus'], df7['Volume_med_mus'], df9['Volume_med_mus'],df5['Volume_inf_mus'], df7['Volume_inf_mus'], df9['Volume_inf_mus'],
-#             df5['Volume_sup_mus'], df7['Volume_sup_mus'], df9['Volume_sup_mus']]
-# # Dataframes {DSC, Hausdorff, Volume, nDSC} separate labels
-# data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
-#             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_int_fat'], df7['DSC_int_fat'], df9['DSC_int_fat'], df5['DSC_ext_fat'], df7['DSC_ext_fat'], df9['DSC_ext_fat'],
-#             df5['DSC_lat_mus'], df7['DSC_lat_mus'], df9['DSC_lat_mus'], df5['DSC_med_mus'], df7['DSC_med_mus'], df9['DSC_med_mus'], df5['DSC_inf_mus'], df7['DSC_inf_mus'], df9['DSC_inf_mus'],
-#             df5['DSC_sup_mus'], df7['DSC_sup_mus'], df9['DSC_sup_mus']]
-# data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
-#             df9['Haus_avg_globe'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df7['Haus_avg_int_fat'], df9['Haus_avg_int_fat'], 
-#             df5['Haus_avg_ext_fat'], df7['Haus_avg_ext_fat'], df9['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df7['Haus_avg_lat_mus'], df9['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], 
-#             df7['Haus_avg_med_mus'], df9['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df7['Haus_avg_inf_mus'], df9['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus'], df7['Haus_avg_sup_mus'], df9['Haus_avg_sup_mus']]
-# data_vol = [df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
-#             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_int_fat'], df7['Volume_int_fat'], df9['Volume_int_fat'], df5['Volume_ext_fat'], df7['Volume_ext_fat'], df9['Volume_ext_fat'],
-#             df5['Volume_lat_mus'], df7['Volume_lat_mus'], df9['Volume_lat_mus'], df5['Volume_med_mus'], df7['Volume_med_mus'], df9['Volume_med_mus'],df5['Volume_inf_mus'], df7['Volume_inf_mus'], df9['Volume_inf_mus'],
-#             df5['Volume_sup_mus'], df7['Volume_sup_mus'], df9['Volume_sup_mus']]
-# data_ndsc = [df5['nDSC_all'], df7['nDSC_all'], df9['nDSC_all'], df5['nDSC_lens'], df7['nDSC_lens'], df9['nDSC_lens'], df5['nDSC_globe'], df7['nDSC_globe'], df9['nDSC_globe'],
-#             df5['nDSC_nerve'], df7['nDSC_nerve'], df9['nDSC_nerve'], df5['nDSC_int_fat'], df7['nDSC_int_fat'], df9['nDSC_int_fat'], df5['nDSC_ext_fat'], df7['nDSC_ext_fat'], df9['nDSC_ext_fat'],
-#             df5['nDSC_lat_mus'], df7['nDSC_lat_mus'], df9['nDSC_lat_mus'], df5['nDSC_med_mus'], df7['nDSC_med_mus'], df9['nDSC_med_mus'], df5['nDSC_inf_mus'], df7['nDSC_inf_mus'], df9['nDSC_inf_mus'],
-#             df5['nDSC_sup_mus'], df7['nDSC_sup_mus'], df9['nDSC_sup_mus']]
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
 data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_nerve'], df5['nDSC_int_fat'], df5['nDSC_ext_fat'], df5['nDSC_lat_mus'], df5['nDSC_med_mus'], df5['nDSC_inf_mus'], df5['nDSC_sup_mus']]
 data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
-# Color palette
-# palette = ['blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green', 'blue','orange','green']
-# Color palette N=1
-# palette = ['red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green']
-# Color palette separate lables
-# palette = ['blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green', 'blue','orange','green','blue','orange','green',
-#             'blue','orange','green', 'blue','orange','green']
-# Color palette separate lables
-# palette = ['blue','blue','blue','blue','blue','blue','blue','blue','blue','blue']
-# Subplots
+
+# Figure 1
 fig, axs = plt.subplots(3, sharex=True)
 fig.suptitle('Similarity metrics N=5')
-# Single plot
-# ax1 = sns.boxplot(data=data_dsc, palette=palette).set(xlabel="Label", ylabel="Value")
-# ax1 = sns.swarmplot(data=data_dsc, palette=palette)
-# ax2 = sns.boxplot(data=data_haus, palette=palette).set(xlabel="Label", ylabel="Value")
-# ax2 = sns.swarmplot(data=data_haus, palette=palette)
-# ax3 = sns.boxplot(data=data_vol, palette=palette).set(xlabel="Label", ylabel="Value")
-# ax3 = sns.swarmplot(data=data_vol, palette=palette)
-# # Boxplot & Swarmplot (points)
-# ax1 = sns.boxplot(data=data_dsc, palette=palette, ax=axs[0]).set(ylabel="Value")
-# ax1 = sns.swarmplot(data=data_dsc, palette=palette, ax=axs[0])
-# ax2 = sns.boxplot(data=data_haus, palette=palette, ax=axs[1]).set(ylabel="Value")
-# ax2 = sns.swarmplot(data=data_haus, palette=palette, ax=axs[1])
-# ax3 = sns.boxplot(data=data_vol, palette=palette, ax=axs[2]).set(ylabel="Value")
-# ax3 = sns.swarmplot(data=data_vol, palette=palette, ax=axs[2])
-# ax4 = sns.boxplot(data=data_ndsc, palette=palette, ax=axs[3]).set(xlabel="Label", ylabel="Value")
-# ax4 = sns.swarmplot(data=data_ndsc, palette=palette, ax=axs[3])
+
 # Boxplot & Swarmplot (points)
 ax1 = sns.boxplot(data=data_dsc, ax=axs[0]).set(ylabel="Value")
 ax1 = sns.swarmplot(data=data_dsc, ax=axs[0])
@@ -584,57 +496,70 @@ ax2 = sns.swarmplot(data=data_ndsc, ax=axs[1])
 ax3 = sns.boxplot(data=data_vol, ax=axs[2]).set(ylabel="Value")
 ax3 = sns.swarmplot(data=data_vol, ax=axs[2])
 
-# Legend
-# legend_elements = [
-#     Line2D([0], [0], color='blue', lw=4, label='N=5'),
-#     Line2D([0], [0], color='orange', lw=4, label='N=7'),
-#     Line2D([0], [0], color='green', lw=4, label='N=9')
-# ]
-
-# Legend N=1
-# legend_elements = [Line2D([0], [0], color='red', lw=4, label='N=1'),
-#     Line2D([0], [0], color='blue', lw=4, label='N=5'),
-#     Line2D([0], [0], color='orange', lw=4, label='N=7'),
-#     Line2D([0], [0], color='green', lw=4, label='N=9')]
-# ax1.legend(handles=legend_elements)
-# ax2.legend(handles=legend_elements)
-# ax3.legend(handles=legend_elements)
-# ax4.legend(handles=legend_elements)
-# Labels and title
-# ax1.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
-# Labels and title separate labels
-# ax1.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
-# Labels and title N=1
-# ax1.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
-# Labels and title separate labels N=5
+# Set labels and titles
 ax1.set_xticklabels(['all','lens','globe','nerve','int_fat','ext_fat','lat_mus','med_mus','inf_mus','sup_mus'])
 ax1.set_title('DSC')
-# Labels and title
-# ax2.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
-# Labels and title separate labels
-# ax2.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
-# Labels and title N=1
-# ax2.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
 ax2.set_title('nDSC')
-# Labels and title 
-# ax3.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
-# Labels and title separate labels
-# ax3.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
-# Labels and title N=1
-# ax3.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
 ax3.set_title('Volume similarity')
-# Labels and title
-# ax4.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
-# Labels and title separate labels
-# ax4.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
-# ax4.set_title('nDSC')
 
-# Save
-# plt.savefig('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/dsc.png')
-# Show
 plt.show()
+'''
+
+''' Spearman correlation plots and values
+
+# Data per label
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_size_separate_labels.csv')
+data_all = [df5['nDSC_all'],df5['Size_all']]
+data_lens = [df5['nDSC_lens'],df5['Size_lens']]
+data_globe = [df5['nDSC_globe'],df5['Size_globe']]
+data_nerve = [df5['nDSC_nerve'],df5['Size_nerve']]
+data_int_fat = [df5['nDSC_int_fat'],df5['Size_int_fat']]
+data_ext_fat = [df5['nDSC_ext_fat'],df5['Size_ext_fat']]
+data_lat_mus = [df5['nDSC_lat_mus'],df5['Size_lat_mus']]
+data_med_mus = [df5['nDSC_med_mus'],df5['Size_med_mus']]
+data_inf_mus = [df5['nDSC_inf_mus'],df5['Size_inf_mus']]
+data_sup_mus = [df5['nDSC_sup_mus'],df5['Size_sup_mus']]
+
+# Figure 2
+fig, axs = plt.subplots(2, 5)
+fig.suptitle('Spearman correlation N=5')
+
+# Plots
+ax0 = sns.scatterplot(data=data_all, ax=axs[0,0], legend='brief')
+ax1 = sns.scatterplot(data=data_lens,ax=axs[0,1], legend='brief')
+ax2 = sns.scatterplot(data=data_globe, ax=axs[0,2], legend='brief')
+ax3 = sns.scatterplot(data=data_nerve, ax=axs[0,3], legend='brief')
+ax4 = sns.scatterplot(data=data_int_fat, ax=axs[0,4], legend='brief')
+ax5 = sns.scatterplot(data=data_ext_fat, ax=axs[1,0], legend='brief')
+ax6 = sns.scatterplot(data=data_lat_mus, ax=axs[1,1], legend='brief')
+ax7 = sns.scatterplot(data=data_med_mus, ax=axs[1,2], legend='brief')
+ax8 = sns.scatterplot(data=data_inf_mus, ax=axs[1,3], legend='brief')
+ax9 = sns.scatterplot(data=data_sup_mus, ax=axs[1,4], legend='brief')
+
+# Spearman correlation coefficients per label
+scc0 = round(stats.spearmanr(df5['nDSC_all'],df5['Size_all'])[0],4)
+scc1 = round(stats.spearmanr(df5['nDSC_lens'],df5['Size_lens'])[0],4)
+scc2 = round(stats.spearmanr(df5['nDSC_globe'],df5['Size_globe'])[0],4)
+scc3 = round(stats.spearmanr(df5['nDSC_nerve'],df5['Size_nerve'])[0],4)
+scc4 = round(stats.spearmanr(df5['nDSC_int_fat'],df5['Size_int_fat'])[0],4)
+scc5 = round(stats.spearmanr(df5['nDSC_ext_fat'],df5['Size_ext_fat'])[0],4)
+scc6 = round(stats.spearmanr(df5['nDSC_lat_mus'],df5['Size_lat_mus'])[0],4)
+scc7 = round(stats.spearmanr(df5['nDSC_med_mus'],df5['Size_med_mus'])[0],4)
+scc8 = round(stats.spearmanr(df5['nDSC_inf_mus'],df5['Size_inf_mus'])[0],4)
+scc9 = round(stats.spearmanr(df5['nDSC_sup_mus'],df5['Size_sup_mus'])[0],4)
+
+# Set labels and titles
+ax0.set_title('Spearman='+str(scc0))
+ax1.set_title('Spearman='+str(scc1))
+ax2.set_title('Spearman='+str(scc2))
+ax3.set_title('Spearman='+str(scc3))
+ax4.set_title('Spearman='+str(scc4))
+ax5.set_title('Spearman='+str(scc5))
+ax6.set_title('Spearman='+str(scc6))
+ax7.set_title('Spearman='+str(scc7))
+ax8.set_title('Spearman='+str(scc8))
+ax9.set_title('Spearman='+str(scc9))
+
+plt.show()
+
 # '''
