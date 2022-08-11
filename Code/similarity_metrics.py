@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import Line2D
 from sqlalchemy import true
 
-# TODO: nDSC (normalized DSC)
+# nDSC (normalized DSC)
 def dice_norm_metric(ground_truth, predictions):
     '''
     For a single example returns DSC_norm, fpr, fnr
@@ -67,51 +67,61 @@ val_dsc = np.zeros(len(rest_subjects))
 val_hau_avg = np.zeros(len(rest_subjects))
 val_vol = np.zeros(len(rest_subjects))
 val_ndsc = np.zeros(len(rest_subjects))
+val_size = np.zeros(len(rest_subjects))
 # Lens
 val_dsc_lens = np.zeros(len(rest_subjects))
 val_hau_avg_lens = np.zeros(len(rest_subjects))
 val_vol_lens = np.zeros(len(rest_subjects))
 val_ndsc_lens = np.zeros(len(rest_subjects))
+val_size_lens = np.zeros(len(rest_subjects))
 # Globe
 val_dsc_globe = np.zeros(len(rest_subjects))
 val_hau_avg_globe = np.zeros(len(rest_subjects))
 val_vol_globe = np.zeros(len(rest_subjects))
 val_ndsc_globe = np.zeros(len(rest_subjects))
+val_size_globe = np.zeros(len(rest_subjects))
 # Optic nerve
 val_dsc_nerve = np.zeros(len(rest_subjects))
 val_hau_avg_nerve = np.zeros(len(rest_subjects))
 val_vol_nerve = np.zeros(len(rest_subjects))
 val_ndsc_nerve = np.zeros(len(rest_subjects))
+val_size_nerve = np.zeros(len(rest_subjects))
 # Intraconal fat
 val_dsc_int_fat = np.zeros(len(rest_subjects))
 val_hau_avg_int_fat = np.zeros(len(rest_subjects))
 val_vol_int_fat = np.zeros(len(rest_subjects))
 val_ndsc_int_fat = np.zeros(len(rest_subjects))
+val_size_int_fat = np.zeros(len(rest_subjects))
 # Extraconal fat
 val_dsc_ext_fat = np.zeros(len(rest_subjects))
 val_hau_avg_ext_fat = np.zeros(len(rest_subjects))
 val_vol_ext_fat = np.zeros(len(rest_subjects))
 val_ndsc_ext_fat = np.zeros(len(rest_subjects))
+val_size_ext_fat = np.zeros(len(rest_subjects))
 # Lateral rectus muscle
 val_dsc_lat_mus = np.zeros(len(rest_subjects))
 val_hau_avg_lat_mus = np.zeros(len(rest_subjects))
 val_vol_lat_mus = np.zeros(len(rest_subjects))
 val_ndsc_lat_mus = np.zeros(len(rest_subjects))
+val_size_lat_mus = np.zeros(len(rest_subjects))
 # Medial rectus muscle
 val_dsc_med_mus = np.zeros(len(rest_subjects))
 val_hau_avg_med_mus = np.zeros(len(rest_subjects))
 val_vol_med_mus = np.zeros(len(rest_subjects))
 val_ndsc_med_mus = np.zeros(len(rest_subjects))
+val_size_med_mus = np.zeros(len(rest_subjects))
 # Inferior rectus muscle
 val_dsc_inf_mus = np.zeros(len(rest_subjects))
 val_hau_avg_inf_mus = np.zeros(len(rest_subjects))
 val_vol_inf_mus = np.zeros(len(rest_subjects))
 val_ndsc_inf_mus = np.zeros(len(rest_subjects))
+val_size_inf_mus = np.zeros(len(rest_subjects))
 # Superior rectus muscle
 val_dsc_sup_mus = np.zeros(len(rest_subjects))
 val_hau_avg_sup_mus = np.zeros(len(rest_subjects))
 val_vol_sup_mus = np.zeros(len(rest_subjects))
 val_ndsc_sup_mus = np.zeros(len(rest_subjects))
+val_size_sup_mus = np.zeros(len(rest_subjects))
 ### Grouped labels ###
 # # Fats
 # val_dsc_fats = np.zeros(len(rest_subjects))
@@ -130,7 +140,8 @@ for i in range(len(rest_subjects)):
     pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2template.nii.gz' # Labels' image to compare to GT
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
-    pr_arr = sitk.GetArrayFromImage(pr_sitk) # en numpy format 
+    pr_arr = sitk.GetArrayFromImage(pr_sitk) # in numpy format
+    pr_size = pr_arr.shape[0]*pr_arr.shape[1]*pr_arr.shape[2]
 
     # ALL LABELS
     # Measures Image Filter 
@@ -152,6 +163,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr!=0, pr_arr!=0)
     val_ndsc[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr)
+    val_size[i] = size
 
     # LENS
     # Measures Image Filter 
@@ -171,6 +185,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==1, pr_arr==1)
     val_ndsc_lens[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==1)
+    val_size_lens[i] = size
     
     # GLOBE EX LENS
     # Measures Image Filter 
@@ -190,6 +207,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==2, pr_arr==2)
     val_ndsc_globe[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==2)
+    val_size_globe[i] = size
 
     # OPTIC NERVE
     # Measures Image Filter 
@@ -209,6 +229,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==3, pr_arr==3)
     val_ndsc_nerve[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==3)
+    val_size_nerve[i] = size
 
     # INTRACONAL FAT
     # Measures Image Filter 
@@ -228,6 +251,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==4, pr_arr==4)
     val_ndsc_int_fat[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==4)
+    val_size_int_fat[i] = size
 
     # EXTRACONAL FAT
     # Measures Image Filter 
@@ -247,6 +273,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==5, pr_arr==5)
     val_ndsc_ext_fat[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==5)
+    val_size_ext_fat[i] = size
 
     # LATERAL RECTUS MUSCLE
     # Measures Image Filter 
@@ -266,6 +295,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==6, pr_arr==6)
     val_ndsc_lat_mus[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==6)
+    val_size_lat_mus[i] = size
 
     # MEDIAL RECTUS MUSCLE
     # Measures Image Filter 
@@ -285,6 +317,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==7, pr_arr==7)
     val_ndsc_med_mus[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==7)
+    val_size_med_mus[i] = size
 
     # INFERIOR RECTUS MUSCLE
     # Measures Image Filter 
@@ -304,6 +339,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==8, pr_arr==8)
     val_ndsc_inf_mus[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==8)
+    val_size_inf_mus[i] = size
 
     # SUPERIOR RECTUS MUSCLE
     # Measures Image Filter 
@@ -323,6 +361,9 @@ for i in range(len(rest_subjects)):
     # nDSC
     nDSC = dice_norm_metric(gt_arr==9, pr_arr==9)
     val_ndsc_sup_mus[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr==9)
+    val_size_sup_mus[i] = size
 
     ### GROUPED LABELS ###
     # # FATS
@@ -378,10 +419,20 @@ for i in range(len(rest_subjects)):
 # metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'DSC_globe', 'Haus_avg_globe', 
 #             'Volume_globe', 'nDSC_globe', 'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'DSC_fats', 'Haus_avg_fats', 'Volume_fats', 'nDSC_fats',
 #             'DSC_muscles', 'Haus_avg_muscles', 'Volume_muscles', 'nDSC_muscles']
-metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'DSC_globe', 'Haus_avg_globe', 'Volume_globe',
-            'nDSC_globe', 'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'DSC_int_fat', 'Haus_avg_int_fat', 'Volume_int_fat', 'nDSC_int_fat', 'DSC_ext_fat',
-            'Haus_avg_ext_fat', 'Volume_ext_fat', 'nDSC_ext_fat', 'DSC_lat_mus', 'Haus_avg_lat_mus', 'Volume_lat_mus', 'nDSC_lat_mus', 'DSC_med_mus', 'Haus_avg_med_mus',
-            'Volume_med_mus', 'nDSC_med_mus', 'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus', 'nDSC_inf_mus', 'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus', 'nDSC_sup_mus']
+# metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'DSC_globe', 'Haus_avg_globe', 'Volume_globe',
+#             'nDSC_globe', 'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'DSC_int_fat', 'Haus_avg_int_fat', 'Volume_int_fat', 'nDSC_int_fat', 'DSC_ext_fat',
+#             'Haus_avg_ext_fat', 'Volume_ext_fat', 'nDSC_ext_fat', 'DSC_lat_mus', 'Haus_avg_lat_mus', 'Volume_lat_mus', 'nDSC_lat_mus', 'DSC_med_mus', 'Haus_avg_med_mus',
+#             'Volume_med_mus', 'nDSC_med_mus', 'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus', 'nDSC_inf_mus', 'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus', 'nDSC_sup_mus']
+metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'Size_all', 
+            'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'Size_lens',
+            'DSC_globe', 'Haus_avg_globe', 'Volume_globe', 'nDSC_globe', 'Size_globe',
+            'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'Size_nerve',
+            'DSC_int_fat', 'Haus_avg_int_fat', 'Volume_int_fat', 'nDSC_int_fat', 'Size_int_fat',
+            'DSC_ext_fat', 'Haus_avg_ext_fat', 'Volume_ext_fat', 'nDSC_ext_fat', 'Size_ext_fat',
+            'DSC_lat_mus', 'Haus_avg_lat_mus', 'Volume_lat_mus', 'nDSC_lat_mus', 'Size_lat_mus',
+            'DSC_med_mus', 'Haus_avg_med_mus', 'Volume_med_mus', 'nDSC_med_mus', 'Size_med_mus',
+            'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus', 'nDSC_inf_mus', 'Size_inf_mus',
+            'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus', 'nDSC_sup_mus', 'Size_sup_mus']
 # print(val_dsc[0], val_hau[0], val_hau_avg[0])
 # vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
 #                 val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_dsc_fats, val_hau_avg_fats, val_vol_fats, val_dsc_muscles, val_hau_avg_muscles, val_vol_muscles])
@@ -392,15 +443,25 @@ metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_
 # vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_dsc_globe, val_hau_avg_globe, 
 #                 val_vol_globe, val_ndsc_globe, val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_dsc_fats, val_hau_avg_fats, val_vol_fats, val_ndsc_fats,
 #                 val_dsc_muscles, val_hau_avg_muscles, val_vol_muscles, val_ndsc_muscles])
-vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
-                val_ndsc_globe, val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_dsc_int_fat, val_hau_avg_int_fat, val_vol_int_fat, val_ndsc_int_fat, val_dsc_ext_fat,
-                val_hau_avg_ext_fat, val_vol_ext_fat, val_ndsc_ext_fat, val_dsc_lat_mus, val_hau_avg_lat_mus, val_vol_lat_mus, val_ndsc_lat_mus, val_dsc_med_mus, val_hau_avg_med_mus,
-                val_vol_med_mus, val_ndsc_med_mus, val_dsc_inf_mus, val_hau_avg_inf_mus, val_vol_inf_mus, val_ndsc_inf_mus, val_dsc_sup_mus, val_hau_avg_sup_mus, val_vol_sup_mus, val_ndsc_sup_mus])
+# vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
+#                 val_ndsc_globe, val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_dsc_int_fat, val_hau_avg_int_fat, val_vol_int_fat, val_ndsc_int_fat, val_dsc_ext_fat,
+#                 val_hau_avg_ext_fat, val_vol_ext_fat, val_ndsc_ext_fat, val_dsc_lat_mus, val_hau_avg_lat_mus, val_vol_lat_mus, val_ndsc_lat_mus, val_dsc_med_mus, val_hau_avg_med_mus,
+#                 val_vol_med_mus, val_ndsc_med_mus, val_dsc_inf_mus, val_hau_avg_inf_mus, val_vol_inf_mus, val_ndsc_inf_mus, val_dsc_sup_mus, val_hau_avg_sup_mus, val_vol_sup_mus, val_ndsc_sup_mus])
+vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_size,
+                val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_size_lens,
+                val_dsc_globe, val_hau_avg_globe, val_vol_globe, val_ndsc_globe, val_size_globe,
+                val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_size_nerve,
+                val_dsc_int_fat, val_hau_avg_int_fat, val_vol_int_fat, val_ndsc_int_fat, val_size_int_fat,
+                val_dsc_ext_fat, val_hau_avg_ext_fat, val_vol_ext_fat, val_ndsc_ext_fat, val_size_ext_fat,
+                val_dsc_lat_mus, val_hau_avg_lat_mus, val_vol_lat_mus, val_ndsc_lat_mus, val_size_lat_mus,
+                val_dsc_med_mus, val_hau_avg_med_mus, val_vol_med_mus, val_ndsc_med_mus, val_size_med_mus,
+                val_dsc_inf_mus, val_hau_avg_inf_mus, val_vol_inf_mus, val_ndsc_inf_mus, val_size_inf_mus,
+                val_dsc_sup_mus, val_hau_avg_sup_mus, val_vol_sup_mus, val_ndsc_sup_mus, val_size_sup_mus])
 vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_separate_labels.csv', 'w') as file: # TODO 3 tables {5, 7, 9}
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_size_separate_labels.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -429,10 +490,12 @@ plt.show()
 # df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_nDSC.csv')
 # df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_nDSC.csv')
 # Paths nDSC separate labels
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_separate_labels.csv')
-df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_nDSC_separate_labels.csv')
-df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_nDSC_separate_labels.csv')
-# Dataframes {DSC, Hausdorff, Volume, nDSC}
+# df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_separate_labels.csv')
+# df7 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics7_nDSC_separate_labels.csv')
+# df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics9_nDSC_separate_labels.csv')
+# Paths {nDSC, size} separate labels
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_size_separate_labels.csv')
+# # Dataframes {DSC, Hausdorff, Volume, nDSC}
 # data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
 #             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_fats'], df7['DSC_fats'], df9['DSC_fats'], df5['DSC_muscles'], df7['DSC_muscles'], df9['DSC_muscles']]
 # data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
@@ -442,7 +505,7 @@ df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_
 #             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_fats'], df7['Volume_fats'], df9['Volume_fats'], df5['Volume_muscles'], df7['Volume_muscles'], df9['Volume_muscles']]
 # data_ndsc = [df5['nDSC_all'], df7['nDSC_all'], df9['nDSC_all'], df5['nDSC_lens'], df7['nDSC_lens'], df9['nDSC_lens'], df5['nDSC_globe'], df7['nDSC_globe'], df9['nDSC_globe'],
 #             df5['nDSC_nerve'], df7['nDSC_nerve'], df9['nDSC_nerve'], df5['nDSC_fats'], df7['nDSC_fats'], df9['nDSC_fats'], df5['nDSC_muscles'], df7['nDSC_muscles'], df9['nDSC_muscles']]
-# Dataframes plus N=1
+# # Dataframes plus N=1
 # data_dsc = [df1['DSC_all'], df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df1['DSC_lens'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df1['DSC_globe'],df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
 #             df1['DSC_nerve'], df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df1['DSC_fats'], df5['DSC_fats'], df7['DSC_fats'], df9['DSC_fats'], df1['DSC_muscles'], df5['DSC_muscles'], df7['DSC_muscles'], df9['DSC_muscles']]
 # data_haus = [df1['Haus_avg_all'], df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df1['Haus_avg_lens'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df1['Haus_avg_globe'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
@@ -450,7 +513,7 @@ df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_
 #             df1['Haus_avg_muscles'], df5['Haus_avg_muscles'], df7['Haus_avg_muscles'], df9['Haus_avg_muscles']]
 # data_vol = [df1['Volume_all'], df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df1['Volume_lens'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df1['Volume_globe'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
 #             df1['Volume_nerve'], df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df1['Volume_fats'], df5['Volume_fats'], df7['Volume_fats'], df9['Volume_fats'], df1['Volume_muscles'], df5['Volume_muscles'], df7['Volume_muscles'], df9['Volume_muscles']]
-# Dataframes {DSC, Hausdorff, Volume} separate labels
+# # Dataframes {DSC, Hausdorff, Volume} separate labels
 # data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
 #             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_int_fat'], df7['DSC_int_fat'], df9['DSC_int_fat'], df5['DSC_ext_fat'], df7['DSC_ext_fat'], df9['DSC_ext_fat'],
 #             df5['DSC_lat_mus'], df7['DSC_lat_mus'], df9['DSC_lat_mus'], df5['DSC_med_mus'], df7['DSC_med_mus'], df9['DSC_med_mus'], df5['DSC_inf_mus'], df7['DSC_inf_mus'], df9['DSC_inf_mus'],
@@ -463,34 +526,40 @@ df9 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_
 #             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_int_fat'], df7['Volume_int_fat'], df9['Volume_int_fat'], df5['Volume_ext_fat'], df7['Volume_ext_fat'], df9['Volume_ext_fat'],
 #             df5['Volume_lat_mus'], df7['Volume_lat_mus'], df9['Volume_lat_mus'], df5['Volume_med_mus'], df7['Volume_med_mus'], df9['Volume_med_mus'],df5['Volume_inf_mus'], df7['Volume_inf_mus'], df9['Volume_inf_mus'],
 #             df5['Volume_sup_mus'], df7['Volume_sup_mus'], df9['Volume_sup_mus']]
-# Dataframes {DSC, Hausdorff, Volume, nDSC} separate labels
-data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
-            df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_int_fat'], df7['DSC_int_fat'], df9['DSC_int_fat'], df5['DSC_ext_fat'], df7['DSC_ext_fat'], df9['DSC_ext_fat'],
-            df5['DSC_lat_mus'], df7['DSC_lat_mus'], df9['DSC_lat_mus'], df5['DSC_med_mus'], df7['DSC_med_mus'], df9['DSC_med_mus'], df5['DSC_inf_mus'], df7['DSC_inf_mus'], df9['DSC_inf_mus'],
-            df5['DSC_sup_mus'], df7['DSC_sup_mus'], df9['DSC_sup_mus']]
-data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
-            df9['Haus_avg_globe'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df7['Haus_avg_int_fat'], df9['Haus_avg_int_fat'], 
-            df5['Haus_avg_ext_fat'], df7['Haus_avg_ext_fat'], df9['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df7['Haus_avg_lat_mus'], df9['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], 
-            df7['Haus_avg_med_mus'], df9['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df7['Haus_avg_inf_mus'], df9['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus'], df7['Haus_avg_sup_mus'], df9['Haus_avg_sup_mus']]
-data_vol = [df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
-            df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_int_fat'], df7['Volume_int_fat'], df9['Volume_int_fat'], df5['Volume_ext_fat'], df7['Volume_ext_fat'], df9['Volume_ext_fat'],
-            df5['Volume_lat_mus'], df7['Volume_lat_mus'], df9['Volume_lat_mus'], df5['Volume_med_mus'], df7['Volume_med_mus'], df9['Volume_med_mus'],df5['Volume_inf_mus'], df7['Volume_inf_mus'], df9['Volume_inf_mus'],
-            df5['Volume_sup_mus'], df7['Volume_sup_mus'], df9['Volume_sup_mus']]
-data_ndsc = [df5['nDSC_all'], df7['nDSC_all'], df9['nDSC_all'], df5['nDSC_lens'], df7['nDSC_lens'], df9['nDSC_lens'], df5['nDSC_globe'], df7['nDSC_globe'], df9['nDSC_globe'],
-            df5['nDSC_nerve'], df7['nDSC_nerve'], df9['nDSC_nerve'], df5['nDSC_int_fat'], df7['nDSC_int_fat'], df9['nDSC_int_fat'], df5['nDSC_ext_fat'], df7['nDSC_ext_fat'], df9['nDSC_ext_fat'],
-            df5['nDSC_lat_mus'], df7['nDSC_lat_mus'], df9['nDSC_lat_mus'], df5['nDSC_med_mus'], df7['nDSC_med_mus'], df9['nDSC_med_mus'], df5['nDSC_inf_mus'], df7['nDSC_inf_mus'], df9['nDSC_inf_mus'],
-            df5['nDSC_sup_mus'], df7['nDSC_sup_mus'], df9['nDSC_sup_mus']]
+# # Dataframes {DSC, Hausdorff, Volume, nDSC} separate labels
+# data_dsc = [df5['DSC_all'], df7['DSC_all'], df9['DSC_all'], df5['DSC_lens'], df7['DSC_lens'], df9['DSC_lens'], df5['DSC_globe'], df7['DSC_globe'], df9['DSC_globe'],
+#             df5['DSC_nerve'], df7['DSC_nerve'], df9['DSC_nerve'], df5['DSC_int_fat'], df7['DSC_int_fat'], df9['DSC_int_fat'], df5['DSC_ext_fat'], df7['DSC_ext_fat'], df9['DSC_ext_fat'],
+#             df5['DSC_lat_mus'], df7['DSC_lat_mus'], df9['DSC_lat_mus'], df5['DSC_med_mus'], df7['DSC_med_mus'], df9['DSC_med_mus'], df5['DSC_inf_mus'], df7['DSC_inf_mus'], df9['DSC_inf_mus'],
+#             df5['DSC_sup_mus'], df7['DSC_sup_mus'], df9['DSC_sup_mus']]
+# data_haus = [df5['Haus_avg_all'], df7['Haus_avg_all'], df9['Haus_avg_all'], df5['Haus_avg_lens'], df7['Haus_avg_lens'], df9['Haus_avg_lens'], df5['Haus_avg_globe'], df7['Haus_avg_globe'],
+#             df9['Haus_avg_globe'], df5['Haus_avg_nerve'], df7['Haus_avg_nerve'], df9['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df7['Haus_avg_int_fat'], df9['Haus_avg_int_fat'], 
+#             df5['Haus_avg_ext_fat'], df7['Haus_avg_ext_fat'], df9['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df7['Haus_avg_lat_mus'], df9['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], 
+#             df7['Haus_avg_med_mus'], df9['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df7['Haus_avg_inf_mus'], df9['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus'], df7['Haus_avg_sup_mus'], df9['Haus_avg_sup_mus']]
+# data_vol = [df5['Volume_all'], df7['Volume_all'], df9['Volume_all'], df5['Volume_lens'], df7['Volume_lens'], df9['Volume_lens'], df5['Volume_globe'], df7['Volume_globe'], df9['Volume_globe'],
+#             df5['Volume_nerve'], df7['Volume_nerve'], df9['Volume_nerve'], df5['Volume_int_fat'], df7['Volume_int_fat'], df9['Volume_int_fat'], df5['Volume_ext_fat'], df7['Volume_ext_fat'], df9['Volume_ext_fat'],
+#             df5['Volume_lat_mus'], df7['Volume_lat_mus'], df9['Volume_lat_mus'], df5['Volume_med_mus'], df7['Volume_med_mus'], df9['Volume_med_mus'],df5['Volume_inf_mus'], df7['Volume_inf_mus'], df9['Volume_inf_mus'],
+#             df5['Volume_sup_mus'], df7['Volume_sup_mus'], df9['Volume_sup_mus']]
+# data_ndsc = [df5['nDSC_all'], df7['nDSC_all'], df9['nDSC_all'], df5['nDSC_lens'], df7['nDSC_lens'], df9['nDSC_lens'], df5['nDSC_globe'], df7['nDSC_globe'], df9['nDSC_globe'],
+#             df5['nDSC_nerve'], df7['nDSC_nerve'], df9['nDSC_nerve'], df5['nDSC_int_fat'], df7['nDSC_int_fat'], df9['nDSC_int_fat'], df5['nDSC_ext_fat'], df7['nDSC_ext_fat'], df9['nDSC_ext_fat'],
+#             df5['nDSC_lat_mus'], df7['nDSC_lat_mus'], df9['nDSC_lat_mus'], df5['nDSC_med_mus'], df7['nDSC_med_mus'], df9['nDSC_med_mus'], df5['nDSC_inf_mus'], df7['nDSC_inf_mus'], df9['nDSC_inf_mus'],
+#             df5['nDSC_sup_mus'], df7['nDSC_sup_mus'], df9['nDSC_sup_mus']]
 
+# # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
+data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
+data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_nerve'], df5['nDSC_int_fat'], df5['nDSC_ext_fat'], df5['nDSC_lat_mus'], df5['nDSC_med_mus'], df5['nDSC_inf_mus'], df5['nDSC_sup_mus']]
+data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
 # Color palette
 # palette = ['blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green', 'blue','orange','green']
 # Color palette N=1
 # palette = ['red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green','red','blue','orange','green']
 # Color palette separate lables
-palette = ['blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green', 'blue','orange','green','blue','orange','green',
-            'blue','orange','green', 'blue','orange','green']
+# palette = ['blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green','blue','orange','green', 'blue','orange','green','blue','orange','green',
+#             'blue','orange','green', 'blue','orange','green']
+# Color palette separate lables
+# palette = ['blue','blue','blue','blue','blue','blue','blue','blue','blue','blue']
 # Subplots
-fig, axs = plt.subplots(4, sharex=True)
-fig.suptitle('Similarity metrics')
+fig, axs = plt.subplots(3, sharex=True)
+fig.suptitle('Similarity metrics N=5')
 # Single plot
 # ax1 = sns.boxplot(data=data_dsc, palette=palette).set(xlabel="Label", ylabel="Value")
 # ax1 = sns.swarmplot(data=data_dsc, palette=palette)
@@ -498,60 +567,71 @@ fig.suptitle('Similarity metrics')
 # ax2 = sns.swarmplot(data=data_haus, palette=palette)
 # ax3 = sns.boxplot(data=data_vol, palette=palette).set(xlabel="Label", ylabel="Value")
 # ax3 = sns.swarmplot(data=data_vol, palette=palette)
+# # Boxplot & Swarmplot (points)
+# ax1 = sns.boxplot(data=data_dsc, palette=palette, ax=axs[0]).set(ylabel="Value")
+# ax1 = sns.swarmplot(data=data_dsc, palette=palette, ax=axs[0])
+# ax2 = sns.boxplot(data=data_haus, palette=palette, ax=axs[1]).set(ylabel="Value")
+# ax2 = sns.swarmplot(data=data_haus, palette=palette, ax=axs[1])
+# ax3 = sns.boxplot(data=data_vol, palette=palette, ax=axs[2]).set(ylabel="Value")
+# ax3 = sns.swarmplot(data=data_vol, palette=palette, ax=axs[2])
+# ax4 = sns.boxplot(data=data_ndsc, palette=palette, ax=axs[3]).set(xlabel="Label", ylabel="Value")
+# ax4 = sns.swarmplot(data=data_ndsc, palette=palette, ax=axs[3])
 # Boxplot & Swarmplot (points)
-ax1 = sns.boxplot(data=data_dsc, palette=palette, ax=axs[0]).set(ylabel="Value")
-ax1 = sns.swarmplot(data=data_dsc, palette=palette, ax=axs[0])
-ax2 = sns.boxplot(data=data_haus, palette=palette, ax=axs[1]).set(ylabel="Value")
-ax2 = sns.swarmplot(data=data_haus, palette=palette, ax=axs[1])
-ax3 = sns.boxplot(data=data_vol, palette=palette, ax=axs[2]).set(ylabel="Value")
-ax3 = sns.swarmplot(data=data_vol, palette=palette, ax=axs[2])
-ax4 = sns.boxplot(data=data_ndsc, palette=palette, ax=axs[3]).set(xlabel="Label", ylabel="Value")
-ax4 = sns.swarmplot(data=data_ndsc, palette=palette, ax=axs[3])
+ax1 = sns.boxplot(data=data_dsc, ax=axs[0]).set(ylabel="Value")
+ax1 = sns.swarmplot(data=data_dsc, ax=axs[0])
+ax2 = sns.boxplot(data=data_ndsc, ax=axs[1]).set(ylabel="Value")
+ax2 = sns.swarmplot(data=data_ndsc, ax=axs[1])
+ax3 = sns.boxplot(data=data_vol, ax=axs[2]).set(ylabel="Value")
+ax3 = sns.swarmplot(data=data_vol, ax=axs[2])
+
 # Legend
-legend_elements = [
-    Line2D([0], [0], color='blue', lw=4, label='N=5'),
-    Line2D([0], [0], color='orange', lw=4, label='N=7'),
-    Line2D([0], [0], color='green', lw=4, label='N=9')
-]
+# legend_elements = [
+#     Line2D([0], [0], color='blue', lw=4, label='N=5'),
+#     Line2D([0], [0], color='orange', lw=4, label='N=7'),
+#     Line2D([0], [0], color='green', lw=4, label='N=9')
+# ]
+
 # Legend N=1
 # legend_elements = [Line2D([0], [0], color='red', lw=4, label='N=1'),
 #     Line2D([0], [0], color='blue', lw=4, label='N=5'),
 #     Line2D([0], [0], color='orange', lw=4, label='N=7'),
 #     Line2D([0], [0], color='green', lw=4, label='N=9')]
-ax1.legend(handles=legend_elements)
-ax2.legend(handles=legend_elements)
-ax3.legend(handles=legend_elements)
-ax4.legend(handles=legend_elements)
+# ax1.legend(handles=legend_elements)
+# ax2.legend(handles=legend_elements)
+# ax3.legend(handles=legend_elements)
+# ax4.legend(handles=legend_elements)
 # Labels and title
 # ax1.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
 # Labels and title separate labels
-ax1.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-                    'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
+# ax1.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
+#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
 # Labels and title N=1
 # ax1.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
+# Labels and title separate labels N=5
+ax1.set_xticklabels(['all','lens','globe','nerve','int_fat','ext_fat','lat_mus','med_mus','inf_mus','sup_mus'])
 ax1.set_title('DSC')
 # Labels and title
 # ax2.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
 # Labels and title separate labels
-ax2.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-                    'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
+# ax2.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
+#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
 # Labels and title N=1
 # ax2.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
-ax2.set_title('Hausdorff distance')
+ax2.set_title('nDSC')
 # Labels and title 
 # ax3.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
 # Labels and title separate labels
-ax3.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-                    'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
+# ax3.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
+#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
 # Labels and title N=1
 # ax3.set_xticklabels(['all','all','all','all','lens','lens','lens','lens','globe','globe','globe','globe','nerve','nerve','nerve','nerve','fats','fats','fats','fats','muscles','muscles','muscles','muscles'])
 ax3.set_title('Volume similarity')
 # Labels and title
 # ax4.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','fats','fats','fats','muscles','muscles','muscles'])
 # Labels and title separate labels
-ax4.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
-                    'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
-ax4.set_title('nDSC')
+# ax4.set_xticklabels(['all','all','all','lens','lens','lens','globe','globe','globe','nerve','nerve','nerve','int_fat','int_fat','int_fat','ext_fat','ext_fat','ext_fat',
+#                     'lat_mus','lat_mus','lat_mus','med_mus','med_mus','med_mus','inf_mus','inf_mus','inf_mus','sup_mus','sup_mus','sup_mus'])
+# ax4.set_title('nDSC')
 
 # Save
 # plt.savefig('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/dsc.png')
