@@ -165,7 +165,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr!=0, pr_arr!=0)
     val_ndsc[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr) / np.count_nonzero(gt_arr)
+    size = np.count_nonzero(pr_arr) / pr_size
     val_size[i] = size
 
     # LENS
@@ -187,7 +187,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==1, pr_arr==1)
     val_ndsc_lens[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==1) / np.count_nonzero(gt_arr==1)
+    size = np.count_nonzero(pr_arr==1) / pr_size
     val_size_lens[i] = size
     
     # GLOBE EX LENS
@@ -209,7 +209,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==2, pr_arr==2)
     val_ndsc_globe[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==2) / np.count_nonzero(gt_arr==2)
+    size = np.count_nonzero(pr_arr==2) / pr_size
     val_size_globe[i] = size
 
     # OPTIC NERVE
@@ -231,7 +231,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==3, pr_arr==3)
     val_ndsc_nerve[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==3) / np.count_nonzero(gt_arr==3)
+    size = np.count_nonzero(pr_arr==3) / pr_size
     val_size_nerve[i] = size
 
     # INTRACONAL FAT
@@ -253,7 +253,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==4, pr_arr==4)
     val_ndsc_int_fat[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==4) / np.count_nonzero(gt_arr==4)
+    size = np.count_nonzero(pr_arr==4) / pr_size
     val_size_int_fat[i] = size
 
     # EXTRACONAL FAT
@@ -275,7 +275,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==5, pr_arr==5)
     val_ndsc_ext_fat[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==5) / np.count_nonzero(gt_arr==5)
+    size = np.count_nonzero(pr_arr==5) / pr_size
     val_size_ext_fat[i] = size
 
     # LATERAL RECTUS MUSCLE
@@ -297,7 +297,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==6, pr_arr==6)
     val_ndsc_lat_mus[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==6) / np.count_nonzero(gt_arr==6)
+    size = np.count_nonzero(pr_arr==6) / pr_size
     val_size_lat_mus[i] = size
 
     # MEDIAL RECTUS MUSCLE
@@ -319,7 +319,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==7, pr_arr==7)
     val_ndsc_med_mus[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==7) / np.count_nonzero(gt_arr==7)
+    size = np.count_nonzero(pr_arr==7) / pr_size
     val_size_med_mus[i] = size
 
     # INFERIOR RECTUS MUSCLE
@@ -341,7 +341,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==8, pr_arr==8)
     val_ndsc_inf_mus[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==8) / np.count_nonzero(gt_arr==8)
+    size = np.count_nonzero(pr_arr==8) / pr_size
     val_size_inf_mus[i] = size
 
     # SUPERIOR RECTUS MUSCLE
@@ -363,7 +363,7 @@ for i in range(len(rest_subjects)):
     nDSC = dice_norm_metric(gt_arr==9, pr_arr==9)
     val_ndsc_sup_mus[i] = nDSC
     # Volume structure
-    size = np.count_nonzero(pr_arr==9) / np.count_nonzero(gt_arr==9)
+    size = np.count_nonzero(pr_arr==9) / pr_size
     val_size_sup_mus[i] = size
 
     ### GROUPED LABELS ###
@@ -462,7 +462,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsgt_separate_labels.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsim_separate_labels.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -508,7 +508,7 @@ plt.show()
 # ''' Spearman correlation plots and values
 
 # Data per label
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsgt_separate_labels.csv')
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsim_separate_labels.csv')
 data_all = [df5['nDSC_all'],df5['Size_all']]
 data_lens = [df5['nDSC_lens'],df5['Size_lens']]
 data_globe = [df5['nDSC_globe'],df5['Size_globe']]
