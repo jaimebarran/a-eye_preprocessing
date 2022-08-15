@@ -509,44 +509,34 @@ plt.show()
 
 # Data per label
 df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsim_separate_labels.csv')
-data_all = [df5['nDSC_all'],df5['Size_all']]
-data_lens = [df5['nDSC_lens'],df5['Size_lens']]
-data_globe = [df5['nDSC_globe'],df5['Size_globe']]
-data_nerve = [df5['nDSC_nerve'],df5['Size_nerve']]
-data_int_fat = [df5['nDSC_int_fat'],df5['Size_int_fat']]
-data_ext_fat = [df5['nDSC_ext_fat'],df5['Size_ext_fat']]
-data_lat_mus = [df5['nDSC_lat_mus'],df5['Size_lat_mus']]
-data_med_mus = [df5['nDSC_med_mus'],df5['Size_med_mus']]
-data_inf_mus = [df5['nDSC_inf_mus'],df5['Size_inf_mus']]
-data_sup_mus = [df5['nDSC_sup_mus'],df5['Size_sup_mus']]
 
 # Figure 2
 fig, axs = plt.subplots(2, 5)
 fig.suptitle('Spearman correlation N=5')
 
 # Plots
-ax0 = sns.scatterplot(data=data_all, ax=axs[0,0], legend='brief')
-ax1 = sns.scatterplot(data=data_lens,ax=axs[0,1], legend='brief')
-ax2 = sns.scatterplot(data=data_globe, ax=axs[0,2], legend='brief')
-ax3 = sns.scatterplot(data=data_nerve, ax=axs[0,3], legend='brief')
-ax4 = sns.scatterplot(data=data_int_fat, ax=axs[0,4], legend='brief')
-ax5 = sns.scatterplot(data=data_ext_fat, ax=axs[1,0], legend='brief')
-ax6 = sns.scatterplot(data=data_lat_mus, ax=axs[1,1], legend='brief')
-ax7 = sns.scatterplot(data=data_med_mus, ax=axs[1,2], legend='brief')
-ax8 = sns.scatterplot(data=data_inf_mus, ax=axs[1,3], legend='brief')
-ax9 = sns.scatterplot(data=data_sup_mus, ax=axs[1,4], legend='brief')
+ax0 = sns.scatterplot(y=df5['DSC_all'], x=df5['Size_all'], ax=axs[0,0], legend='brief')
+ax1 = sns.scatterplot(y=df5['DSC_lens'], x=df5['Size_lens'], ax=axs[0,1], legend='brief')
+ax2 = sns.scatterplot(y=df5['DSC_globe'], x=df5['Size_globe'], ax=axs[0,2], legend='brief')
+ax3 = sns.scatterplot(y=df5['DSC_nerve'], x=df5['Size_nerve'], ax=axs[0,3], legend='brief')
+ax4 = sns.scatterplot(y=df5['DSC_int_fat'], x=df5['Size_int_fat'], ax=axs[0,4], legend='brief')
+ax5 = sns.scatterplot(y=df5['DSC_ext_fat'], x=df5['Size_ext_fat'], ax=axs[1,0], legend='brief')
+ax6 = sns.scatterplot(y=df5['DSC_lat_mus'], x=df5['Size_lat_mus'], ax=axs[1,1], legend='brief')
+ax7 = sns.scatterplot(y=df5['DSC_med_mus'], x=df5['Size_med_mus'], ax=axs[1,2], legend='brief')
+ax8 = sns.scatterplot(y=df5['DSC_inf_mus'], x=df5['Size_inf_mus'], ax=axs[1,3], legend='brief')
+ax9 = sns.scatterplot(y=df5['DSC_sup_mus'], x=df5['Size_sup_mus'], ax=axs[1,4], legend='brief')
 
 # Spearman correlation coefficients per label
-scc0 = round(stats.spearmanr(df5['nDSC_all'],df5['Size_all'])[0],4)
-scc1 = round(stats.spearmanr(df5['nDSC_lens'],df5['Size_lens'])[0],4)
-scc2 = round(stats.spearmanr(df5['nDSC_globe'],df5['Size_globe'])[0],4)
-scc3 = round(stats.spearmanr(df5['nDSC_nerve'],df5['Size_nerve'])[0],4)
-scc4 = round(stats.spearmanr(df5['nDSC_int_fat'],df5['Size_int_fat'])[0],4)
-scc5 = round(stats.spearmanr(df5['nDSC_ext_fat'],df5['Size_ext_fat'])[0],4)
-scc6 = round(stats.spearmanr(df5['nDSC_lat_mus'],df5['Size_lat_mus'])[0],4)
-scc7 = round(stats.spearmanr(df5['nDSC_med_mus'],df5['Size_med_mus'])[0],4)
-scc8 = round(stats.spearmanr(df5['nDSC_inf_mus'],df5['Size_inf_mus'])[0],4)
-scc9 = round(stats.spearmanr(df5['nDSC_sup_mus'],df5['Size_sup_mus'])[0],4)
+scc0 = round(stats.spearmanr(df5['DSC_all'],df5['Size_all'])[0],4)
+scc1 = round(stats.spearmanr(df5['DSC_lens'],df5['Size_lens'])[0],4)
+scc2 = round(stats.spearmanr(df5['DSC_globe'],df5['Size_globe'])[0],4)
+scc3 = round(stats.spearmanr(df5['DSC_nerve'],df5['Size_nerve'])[0],4)
+scc4 = round(stats.spearmanr(df5['DSC_int_fat'],df5['Size_int_fat'])[0],4)
+scc5 = round(stats.spearmanr(df5['DSC_ext_fat'],df5['Size_ext_fat'])[0],4)
+scc6 = round(stats.spearmanr(df5['DSC_lat_mus'],df5['Size_lat_mus'])[0],4)
+scc7 = round(stats.spearmanr(df5['DSC_med_mus'],df5['Size_med_mus'])[0],4)
+scc8 = round(stats.spearmanr(df5['DSC_inf_mus'],df5['Size_inf_mus'])[0],4)
+scc9 = round(stats.spearmanr(df5['DSC_sup_mus'],df5['Size_sup_mus'])[0],4)
 
 # Set labels and titles
 ax0.set_title('Spearman='+str(scc0))
