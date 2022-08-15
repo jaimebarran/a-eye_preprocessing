@@ -144,29 +144,29 @@ for i in range(len(rest_subjects)):
     pr_arr = sitk.GetArrayFromImage(pr_sitk) # in numpy format
     pr_size = pr_arr.shape[0]*pr_arr.shape[1]*pr_arr.shape[2]
 
-    # ALL LABELS
-    # Measures Image Filter 
-    overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
-    overlap_measures_filter.Execute(gt_sitk, pr_sitk)
-    # DSC
-    dsc = overlap_measures_filter.GetDiceCoefficient() # Get the mean overlap (Dice coefficient) over all labels
-    val_dsc[i] = dsc
-    # Volume
-    vol = overlap_measures_filter.GetVolumeSimilarity() # Get the volume similarity over all labels
-    val_vol[i] = vol
-    # Hausdorff distance
-    hausdorf = sitk.HausdorffDistanceImageFilter()
-    hausdorf.Execute(gt_sitk, pr_sitk)
-    # hausdorf_distance = hausdorf.GetHausdorffDistance()
-    # val_hau[i] = hausdorf_distance
-    hausdorf_distance_avg = hausdorf.GetAverageHausdorffDistance() # Return the computed Hausdorff distance
-    val_hau_avg[i] = hausdorf_distance_avg
-    # nDSC
-    nDSC = dice_norm_metric(gt_arr!=0, pr_arr!=0)
-    val_ndsc[i] = nDSC
-    # Volume structure
-    size = np.count_nonzero(pr_arr) / pr_size
-    val_size[i] = size
+    # # ALL LABELS
+    # # Measures Image Filter 
+    # overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
+    # overlap_measures_filter.Execute(gt_sitk, pr_sitk)
+    # # DSC
+    # dsc = overlap_measures_filter.GetDiceCoefficient() # Get the mean overlap (Dice coefficient) over all labels
+    # val_dsc[i] = dsc
+    # # Volume
+    # vol = overlap_measures_filter.GetVolumeSimilarity() # Get the volume similarity over all labels
+    # val_vol[i] = vol
+    # # Hausdorff distance
+    # hausdorf = sitk.HausdorffDistanceImageFilter()
+    # hausdorf.Execute(gt_sitk, pr_sitk)
+    # # hausdorf_distance = hausdorf.GetHausdorffDistance()
+    # # val_hau[i] = hausdorf_distance
+    # hausdorf_distance_avg = hausdorf.GetAverageHausdorffDistance() # Return the computed Hausdorff distance
+    # val_hau_avg[i] = hausdorf_distance_avg
+    # # nDSC
+    # nDSC = dice_norm_metric(gt_arr!=0, pr_arr!=0)
+    # val_ndsc[i] = nDSC
+    # # Volume structure
+    # size = np.count_nonzero(pr_arr) / pr_size
+    # val_size[i] = size
 
     # LENS
     # Measures Image Filter 
@@ -359,12 +359,29 @@ for i in range(len(rest_subjects)):
     hausdorf.Execute(gt_sitk==9, pr_sitk==9)
     hausdorf_distance_avg = hausdorf.GetAverageHausdorffDistance() # Return the computed Hausdorff distance
     val_hau_avg_sup_mus[i] = hausdorf_distance_avg
-    # nDSC
+    # nDSCvol
     nDSC = dice_norm_metric(gt_arr==9, pr_arr==9)
     val_ndsc_sup_mus[i] = nDSC
     # Volume structure
     size = np.count_nonzero(pr_arr==9) / pr_size
     val_size_sup_mus[i] = size
+
+    # ALL LABELS
+    # DSC
+    dsc = (val_dsc_lens[i]+val_dsc_globe[i]+val_dsc_nerve[i]+val_dsc_int_fat[i]+val_dsc_ext_fat[i]+val_dsc_lat_mus[i]+val_dsc_med_mus[i]+val_dsc_inf_mus[i]+val_dsc_sup_mus[i])/9
+    val_dsc[i] = dsc
+    # Volume
+    vol = (val_vol_lens[i]+val_vol_globe[i]+val_vol_nerve[i]+val_vol_int_fat[i]+val_vol_ext_fat[i]+val_vol_lat_mus[i]+val_vol_med_mus[i]+val_vol_inf_mus[i]+val_vol_sup_mus[i])/9
+    val_vol[i] = vol
+    # Hausdorff distance
+    hau_avg = (val_hau_avg_lens[i]+val_hau_avg_globe[i]+val_hau_avg_nerve[i]+val_hau_avg_int_fat[i]+val_hau_avg_ext_fat[i]+val_hau_avg_lat_mus[i]+val_hau_avg_med_mus[i]+val_hau_avg_inf_mus[i]+val_hau_avg_sup_mus[i])/9
+    val_hau_avg[i] = hau_avg
+    # nDSC
+    nDSC = (val_ndsc_lens[i]+val_ndsc_globe[i]+val_ndsc_nerve[i]+val_ndsc_int_fat[i]+val_ndsc_ext_fat[i]+val_ndsc_lat_mus[i]+val_ndsc_med_mus[i]+val_ndsc_inf_mus[i]+val_ndsc_sup_mus[i])/9
+    val_ndsc[i] = nDSC
+    # Volume structure
+    size = np.count_nonzero(pr_arr) / pr_size
+    val_size[i] = size
 
     ### GROUPED LABELS ###
     # # FATS
@@ -462,7 +479,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsim_separate_labels.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5__avgAll_nDSC_sizeprvsim_separate_labels.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -477,7 +494,7 @@ plt.show()
 '''
 
 ''' Plot per metric
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_size_separate_labels.csv')
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_avgAll_nDSC_sizeprvsim_separate_labels.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
@@ -503,40 +520,40 @@ ax2.set_title('nDSC')
 ax3.set_title('Volume similarity')
 
 plt.show()
-'''
+# '''
 
 # ''' Spearman correlation plots and values
 
 # Data per label
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_nDSC_sizeprvsim_separate_labels.csv')
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_avgAll_nDSC_sizeprvsim_separate_labels.csv')
 
 # Figure 2
 fig, axs = plt.subplots(2, 5)
 fig.suptitle('Spearman correlation N=5')
 
 # Plots
-ax0 = sns.scatterplot(y=df5['DSC_all'], x=df5['Size_all'], ax=axs[0,0], legend='brief')
-ax1 = sns.scatterplot(y=df5['DSC_lens'], x=df5['Size_lens'], ax=axs[0,1], legend='brief')
-ax2 = sns.scatterplot(y=df5['DSC_globe'], x=df5['Size_globe'], ax=axs[0,2], legend='brief')
-ax3 = sns.scatterplot(y=df5['DSC_nerve'], x=df5['Size_nerve'], ax=axs[0,3], legend='brief')
-ax4 = sns.scatterplot(y=df5['DSC_int_fat'], x=df5['Size_int_fat'], ax=axs[0,4], legend='brief')
-ax5 = sns.scatterplot(y=df5['DSC_ext_fat'], x=df5['Size_ext_fat'], ax=axs[1,0], legend='brief')
-ax6 = sns.scatterplot(y=df5['DSC_lat_mus'], x=df5['Size_lat_mus'], ax=axs[1,1], legend='brief')
-ax7 = sns.scatterplot(y=df5['DSC_med_mus'], x=df5['Size_med_mus'], ax=axs[1,2], legend='brief')
-ax8 = sns.scatterplot(y=df5['DSC_inf_mus'], x=df5['Size_inf_mus'], ax=axs[1,3], legend='brief')
-ax9 = sns.scatterplot(y=df5['DSC_sup_mus'], x=df5['Size_sup_mus'], ax=axs[1,4], legend='brief')
+ax0 = sns.scatterplot(y=df5['nDSC_all'], x=df5['Size_all'], ax=axs[0,0], legend='brief')
+ax1 = sns.scatterplot(y=df5['nDSC_lens'], x=df5['Size_lens'], ax=axs[0,1], legend='brief')
+ax2 = sns.scatterplot(y=df5['nDSC_globe'], x=df5['Size_globe'], ax=axs[0,2], legend='brief')
+ax3 = sns.scatterplot(y=df5['nDSC_nerve'], x=df5['Size_nerve'], ax=axs[0,3], legend='brief')
+ax4 = sns.scatterplot(y=df5['nDSC_int_fat'], x=df5['Size_int_fat'], ax=axs[0,4], legend='brief')
+ax5 = sns.scatterplot(y=df5['nDSC_ext_fat'], x=df5['Size_ext_fat'], ax=axs[1,0], legend='brief')
+ax6 = sns.scatterplot(y=df5['nDSC_lat_mus'], x=df5['Size_lat_mus'], ax=axs[1,1], legend='brief')
+ax7 = sns.scatterplot(y=df5['nDSC_med_mus'], x=df5['Size_med_mus'], ax=axs[1,2], legend='brief')
+ax8 = sns.scatterplot(y=df5['nDSC_inf_mus'], x=df5['Size_inf_mus'], ax=axs[1,3], legend='brief')
+ax9 = sns.scatterplot(y=df5['nDSC_sup_mus'], x=df5['Size_sup_mus'], ax=axs[1,4], legend='brief')
 
 # Spearman correlation coefficients per label
-scc0 = round(stats.spearmanr(df5['DSC_all'],df5['Size_all'])[0],4)
-scc1 = round(stats.spearmanr(df5['DSC_lens'],df5['Size_lens'])[0],4)
-scc2 = round(stats.spearmanr(df5['DSC_globe'],df5['Size_globe'])[0],4)
-scc3 = round(stats.spearmanr(df5['DSC_nerve'],df5['Size_nerve'])[0],4)
-scc4 = round(stats.spearmanr(df5['DSC_int_fat'],df5['Size_int_fat'])[0],4)
-scc5 = round(stats.spearmanr(df5['DSC_ext_fat'],df5['Size_ext_fat'])[0],4)
-scc6 = round(stats.spearmanr(df5['DSC_lat_mus'],df5['Size_lat_mus'])[0],4)
-scc7 = round(stats.spearmanr(df5['DSC_med_mus'],df5['Size_med_mus'])[0],4)
-scc8 = round(stats.spearmanr(df5['DSC_inf_mus'],df5['Size_inf_mus'])[0],4)
-scc9 = round(stats.spearmanr(df5['DSC_sup_mus'],df5['Size_sup_mus'])[0],4)
+scc0 = round(stats.spearmanr(df5['nDSC_all'],df5['Size_all'])[0],4)
+scc1 = round(stats.spearmanr(df5['nDSC_lens'],df5['Size_lens'])[0],4)
+scc2 = round(stats.spearmanr(df5['nDSC_globe'],df5['Size_globe'])[0],4)
+scc3 = round(stats.spearmanr(df5['nDSC_nerve'],df5['Size_nerve'])[0],4)
+scc4 = round(stats.spearmanr(df5['nDSC_int_fat'],df5['Size_int_fat'])[0],4)
+scc5 = round(stats.spearmanr(df5['nDSC_ext_fat'],df5['Size_ext_fat'])[0],4)
+scc6 = round(stats.spearmanr(df5['nDSC_lat_mus'],df5['Size_lat_mus'])[0],4)
+scc7 = round(stats.spearmanr(df5['nDSC_med_mus'],df5['Size_med_mus'])[0],4)
+scc8 = round(stats.spearmanr(df5['nDSC_inf_mus'],df5['Size_inf_mus'])[0],4)
+scc9 = round(stats.spearmanr(df5['nDSC_sup_mus'],df5['Size_sup_mus'])[0],4)
 
 # Set labels and titles
 ax0.set_title('Spearman='+str(scc0))
