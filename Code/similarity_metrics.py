@@ -16,7 +16,7 @@ def dice_norm_metric(ground_truth, predictions):
     '''
 
     # Reference for normalized DSC
-    r = 0.001
+    r = 0.001 # It should be 1/N*(np.sum(voxels_label[i])/np.sum(voxels_image[i])) i belonging to training set
     # Cast to float32 type
     gt = ground_truth.astype("float32")
     seg = predictions.astype("float32")

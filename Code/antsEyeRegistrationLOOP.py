@@ -108,7 +108,6 @@ for i in range(len(rest_subjects)):
     if not os.path.exists(output_reg_cropped_path):
         os.makedirs(output_reg_cropped_path)
     
-
     # antsRegistrationSyN (for cropped images)
     command1 = 'antsRegistrationSyN.sh -d 3' + \
     ' -m ' + input_t1_cropped   + \
