@@ -9,8 +9,8 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import Line2D
 from sqlalchemy import true
 from scipy import stats
-import pingouin as pg
 import statsmodels.api as sm
+import pyCompare as pc
 
 
 ''' Data frame file generation
@@ -144,7 +144,8 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/v
 # ''' Bland-Altman plot
 df_vol = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/volumes_bland-altman.csv')
 
-fig, ax = plt.subplots(2, 5, figsize=(20,10), sharex=True, sharey=True)
+''' Subplots
+fig, ax = plt.subplots(2, 5, figsize=(20,10)) #, sharex=True)
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
 
@@ -180,5 +181,12 @@ sm.graphics.mean_diff_plot(df_vol['vol_gt_sup_mus'], df_vol['vol_pr_sup_mus'], a
 ax[1][4].set_title('sup mus')
 
 plt.tight_layout()
-plt.show()
+'''
+
+# ''' Single plot
+# all labels
+pc.blandAltman(df_vol['vol_gt_lens'], df_vol['vol_pr_lens'])
+sm.graphics.mean_diff_plot(df_vol['vol_gt_lens'], df_vol['vol_pr_lens'])
 # '''
+
+plt.show()
