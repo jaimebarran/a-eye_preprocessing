@@ -12,8 +12,6 @@ output_dir = base_dir+'Probability_Maps/'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# template_path = '/mnt/sda1/Repos/a-eye/Data/templateflow/colin27/tpl-MNIColin27_T1w.nii.gz'
-# mask_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/Output/all_segments_mask.nii.gz'
 # template_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0.nii.gz'
 # mask_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/all_segments_mask.nii.gz'
 template_cropped_path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0_cropped_15vox.nii.gz'
@@ -29,8 +27,6 @@ im_template = sitk.ReadImage(template_cropped_path)
 im_mask = sitk.ReadImage(mask_cropped_path)
 
 # Subjects' labels
-# segments = [nb.load(f) for f in Path(base_dir).glob("*/output_colin27/all_segments_template.nii.gz")]
-# segments = [nb.load(f) for f in Path(base_dir).glob("*_labels2template5.nii.gz")]
 segments = [nb.load(f) for f in Path(base_dir).rglob("reg_cropped_best_subjects/*/*labels2template.nii.gz")]
 # print(segments[0].get_fdata()[0,0,0])
 header = segments[0].header.copy()
@@ -46,7 +42,6 @@ lsif.Execute(im_template, im_mask) # Mask! Where all the labels are 1!
 bounding_box = np.array(lsif.GetBoundingBox(1)) # GetBoundingBox(label)
 print(f"Bounding box:  {bounding_box}") # [xmin, xmax, ymin, ymax, zmin, zmax]
 
-
 # Loop
 for x in range(bounding_box[0], bounding_box[1]+1):
     for y in range(bounding_box[2], bounding_box[3]+1):
@@ -54,21 +49,20 @@ for x in range(bounding_box[0], bounding_box[1]+1):
             arr = np.zeros(num_subjects)
             for i in range(num_subjects):
                 arr[i] = segments[i].get_fdata()[x,y,z] # Array of votes from each subject for specific point [x,y,z]
-            # arr_non_zero = arr[np.nonzero(arr)]
-            # median = np.median(arr_non_zero) # [0,9]
-            # most_frequent = mode(arr_non_zero)[0][0]
             prob = np.zeros(9) # 9 classes
             if np.any(arr): # check if array has any nonzero value
                 for j in range(len(prob)):
                     prob[j] = np.count_nonzero(arr ==  j+1) / len(arr) # Array of probabilities for each class
                 # sum_prob = np.sum(prob) # Sum of non-zero probabilities (less than 1)
-                prob_matrix[x,y,z] = np.argmax(prob)+1 if np.amax(prob) >= threshold else 0 # Most likely class (highest probability) between 1 and 9 meeting a threshold
+                # prob_matrix[x,y,z] = np.argmax(prob)+1 if np.amax(prob) >= threshold else 0 # Most likely class (highest probability) between 1 and 9 meeting a threshold
+                # prob_matrix[x,y,z] = np.amax(prob) # np.interp(np.amax(prob), [0,1], [1,9])
+                prob_matrix[x,y,z] = np.interp(np.amax(prob), [0,1], [1,9])
             else:
                 prob_matrix[x,y,z] = 0 # Background
             # prob = len(arr_non_zero == most_frequent)/len(arr)
             # matrix[x,y,z] = np.argmax(prob)
 
 # Probability map representation
-# nii = nb.Nifti1Image(matrix, segments[0].affine, header)
 nii = nb.Nifti1Image(prob_matrix, segments[0].affine, header)
-nii.to_filename(output_dir+"prob_map_cropped_th"+str(int(threshold*100))+".nii.gz")
+# nii.to_filename(output_dir+"prob_map_cropped_th"+str(int(threshold*100))+".nii.gz")
+nii.to_filename(output_dir+"prob_map_cropped_preMaxAPost.nii.gz")
