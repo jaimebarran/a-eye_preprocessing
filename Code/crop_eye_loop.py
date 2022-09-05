@@ -30,7 +30,7 @@ for i in range(len(best_subjects_cc)):
     image = sitk.ReadImage(image_path)
     all_segments = sitk.ReadImage(labels_path)
     image_x_size, image_y_size, image_z_size = image.GetSize()
-    print(f"image_x_size {image_x_size} image_y_size {image_y_size} zimage_z_sizeSize {image_z_size}")
+    print(f"image_x_size {image_x_size} image_y_size {image_y_size} image_z_size{image_z_size}")
 
     # Mask
     all_segments_mask = all_segments > 0
