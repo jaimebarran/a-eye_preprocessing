@@ -43,12 +43,7 @@ def dice_norm_metric(ground_truth, predictions):
 
 ''' Data frame file generation
 base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
-gt_path = base_dir + 'Probability_Maps/prob_map_cropped_th0.nii.gz' # GT
-
-reader = sitk.ImageFileReader()
-reader.SetFileName(gt_path)
-gt_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
-gt_arr = sitk.GetArrayFromImage(gt_sitk) # en numpy format
+gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # GT
 
 # List of best subjects
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
@@ -134,15 +129,23 @@ val_size_sup_mus = np.zeros(len(rest_subjects))
 # val_hau_avg_muscles = np.zeros(len(rest_subjects))
 # val_vol_muscles = np.zeros(len(rest_subjects))
 # val_ndsc_muscles = np.zeros(len(rest_subjects))
+    
+reader = sitk.ImageFileReader()
 
 for i in range(len(rest_subjects)):
 
     # Prediction image to compare to GT
-    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2template2.nii.gz' # Labels' image to compare to GT
+    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject.nii.gz' # Labels' image to compare to GT
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk) # in numpy format
     pr_size = pr_arr.shape[0]*pr_arr.shape[1]*pr_arr.shape[2]
+
+    # Ground truth
+    gt_path = gt_dir + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels_cropped.nii.gz' # GT
+    reader.SetFileName(gt_path)
+    gt_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
+    gt_arr = sitk.GetArrayFromImage(gt_sitk) # en numpy format
 
     # # ALL LABELS
     # # Measures Image Filter 
@@ -479,7 +482,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_avgAll_nDSC_sizeprvsim_separate_labels2.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_N5_GTsubs.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -487,7 +490,7 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/m
 # '''
 
 # ''' Plot per metric
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/metrics5_avgAll_nDSC_sizeprvsim_separate_labels2.csv')
+df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_N5_GTsubs.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
@@ -495,7 +498,7 @@ data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_ne
 data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
 
 # Figure 1
-fig, axs = plt.subplots(3, sharex=True)
+fig, axs = plt.subplots(3)
 fig.suptitle('Similarity metrics N=5')
 
 # Boxplot & Swarmplot (points)
