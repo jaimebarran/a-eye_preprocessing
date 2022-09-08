@@ -64,14 +64,14 @@ val_vol_gt_sup_mus = np.zeros(len(rest_subjects))
 reader = sitk.ImageFileReader()
 
 for i in range(len(rest_subjects)):
-  
+    
     # Prediction image
     pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject.nii.gz'
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk)
     # pr_arr = nb.load(pr_path).get_fdata()
-    # pr_size = pr_arr.shape[0]*pr_arr.shape[1]*pr_arr.shape[2]
+    # pr_size = pr_arr.shape[0] * pr_arr.shape[1] * pr_arr.shape[2] # pr_size == gt_size == image_size
 
     # Ground truth
     gt_path = gt_dir + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels_cropped.nii.gz' # GT
@@ -79,68 +79,69 @@ for i in range(len(rest_subjects)):
     gt_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     gt_arr = sitk.GetArrayFromImage(gt_sitk) # en numpy format
     # gt_arr = nb.load(gt_path).get_fdata()
+    gt_size = gt_arr.shape[0] * gt_arr.shape[1] * gt_arr.shape[2] # pr_size == gt_size == image_size
 
     # LENS
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==1)
+    vol_pr = np.count_nonzero(pr_arr==1) / gt_size
     val_vol_pr_lens[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==1)
+    vol_gt = np.count_nonzero(gt_arr==1) / gt_size
     val_vol_gt_lens[i] = vol_gt
 
     # GLOBE EX LENS
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==2)
+    vol_pr = np.count_nonzero(pr_arr==2) / gt_size
     val_vol_pr_globe[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==2)
+    vol_gt = np.count_nonzero(gt_arr==2) / gt_size
     val_vol_gt_globe[i] = vol_gt
 
     # OPTIC NERVE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==3)
+    vol_pr = np.count_nonzero(pr_arr==3) / gt_size
     val_vol_pr_nerve[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==3)
+    vol_gt = np.count_nonzero(gt_arr==3) / gt_size
     val_vol_gt_nerve[i] = vol_gt
 
     # INTRACONAL FAT
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==4)
+    vol_pr = np.count_nonzero(pr_arr==4) / gt_size
     val_vol_pr_int_fat[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==4)
+    vol_gt = np.count_nonzero(gt_arr==4) / gt_size
     val_vol_gt_int_fat[i] = vol_gt
 
     # EXTRACONAL FAT
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==5)
+    vol_pr = np.count_nonzero(pr_arr==5) / gt_size
     val_vol_pr_ext_fat[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==5)
+    vol_gt = np.count_nonzero(gt_arr==5) / gt_size
     val_vol_gt_ext_fat[i] = vol_gt
 
     # LATERAL RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==6)
+    vol_pr = np.count_nonzero(pr_arr==6) / gt_size
     val_vol_pr_lat_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==6)
+    vol_gt = np.count_nonzero(gt_arr==6) / gt_size
     val_vol_gt_lat_mus[i] = vol_gt
 
     # MEDIAL RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==7)
+    vol_pr = np.count_nonzero(pr_arr==7) / gt_size
     val_vol_pr_med_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==7)
+    vol_gt = np.count_nonzero(gt_arr==7) / gt_size
     val_vol_gt_med_mus[i] = vol_gt
 
     # INFERIOR RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==8)
+    vol_pr = np.count_nonzero(pr_arr==8) / gt_size
     val_vol_pr_inf_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==8)
+    vol_gt = np.count_nonzero(gt_arr==8) / gt_size
     val_vol_gt_inf_mus[i] = vol_gt
 
     # SUPERIOR RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==9)
+    vol_pr = np.count_nonzero(pr_arr==9) / gt_size
     val_vol_pr_sup_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==9)
+    vol_gt = np.count_nonzero(gt_arr==9) / gt_size
     val_vol_gt_sup_mus[i] = vol_gt
 
     # ALL LABELS
@@ -160,7 +161,7 @@ vals = np.array([rest_subjects, val_vol_pr_all, val_vol_gt_all, val_vol_pr_lens,
                 val_vol_pr_med_mus, val_vol_gt_med_mus, val_vol_pr_inf_mus, val_vol_gt_inf_mus, val_vol_pr_sup_mus, val_vol_gt_sup_mus])
 vals = vals.T
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/volumes_bland-altman.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/volumes_bland-altman_size.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -168,51 +169,90 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 # '''
 
 # ''' Bland-Altman plot
-df_vol = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/volumes_bland-altman.csv')
+path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
+filename = 'Volume_difference_Bland-Altman_size_label_vs_image_shared_axis.png'
+df_vol = pd.read_csv(path + 'volumes_bland-altman_size.csv')
 
 # Subplots
-fig, ax = plt.subplots(2, 5, figsize=(20,10), sharex=True)
+k = 1.09 # Figure size to preserve ratio 16:9
+fig, ax = plt.subplots(2, 5, figsize=(16*k, 9*k))
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
+fix_axis = True
+x_right = 0.025
+y_up = 0.02
 
 # all labels
 sm.graphics.mean_diff_plot(df_vol['vol_pr_all'], df_vol['vol_gt_all'], ax=ax[0][0])
 ax[0][0].set_title('all')
+if fix_axis:
+    ax[0][0].set_xlim([0, x_right])
+    ax[0][0].set_ylim([0, y_up])
 # lens
 sm.graphics.mean_diff_plot(df_vol['vol_pr_lens'], df_vol['vol_gt_lens'], ax=ax[0][1])
 ax[0][1].set_title('lens')
+if fix_axis:
+    ax[0][1].set_xlim([0, x_right])
+    ax[0][1].set_ylim([0, y_up])
 # globe
 sm.graphics.mean_diff_plot(df_vol['vol_pr_globe'], df_vol['vol_gt_globe'], ax=ax[0][2])
 ax[0][2].set_title('globe')
+if fix_axis:
+    ax[0][2].set_xlim([0, x_right])
+    ax[0][2].set_ylim([0, y_up])
 # nerve
 sm.graphics.mean_diff_plot(df_vol['vol_pr_nerve'], df_vol['vol_gt_nerve'], ax=ax[0][3])
 ax[0][3].set_title('nerve')
+if fix_axis:
+    ax[0][3].set_xlim([0, x_right])
+    ax[0][3].set_ylim([0, y_up])
 # int fat
 sm.graphics.mean_diff_plot(df_vol['vol_pr_int_fat'], df_vol['vol_gt_int_fat'], ax=ax[0][4])
 ax[0][4].set_title('int fat')
+if fix_axis:
+    ax[0][4].set_xlim([0, x_right])
+    ax[0][4].set_ylim([0, y_up])
 # ext fat
 sm.graphics.mean_diff_plot(df_vol['vol_pr_ext_fat'], df_vol['vol_gt_ext_fat'], ax=ax[1][0])
 ax[1][0].set_title('ext fat')
+if fix_axis:
+    ax[1][0].set_xlim([0, x_right])
+    ax[1][0].set_ylim([0, y_up])
 # lat mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_lat_mus'], df_vol['vol_gt_lat_mus'], ax=ax[1][1])
 ax[1][1].set_title('lat mus')
+if fix_axis:
+    ax[1][1].set_xlim([0, x_right])
+    ax[1][1].set_ylim([0, y_up])
 # med mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_med_mus'], df_vol['vol_gt_med_mus'], ax=ax[1][2])
 ax[1][2].set_title('med mus')
+if fix_axis:
+    ax[1][2].set_xlim([0, x_right])
+    ax[1][2].set_ylim([0, y_up])
 # inf mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_inf_mus'], df_vol['vol_gt_inf_mus'], ax=ax[1][3])
 ax[1][3].set_title('inf mus')
+if fix_axis:
+    ax[1][3].set_xlim([0, x_right])
+    ax[1][3].set_ylim([0, y_up])
 # sup mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_sup_mus'], df_vol['vol_gt_sup_mus'], ax=ax[1][4])
 ax[1][4].set_title('sup mus')
+if fix_axis:
+    ax[1][4].set_xlim([0, x_right])
+    ax[1][4].set_ylim([0, y_up])
 
-plt.tight_layout()
+# plt.tight_layout()
 
 # Single plot
 # all labels
 # pc.blandAltman(df_vol['vol_gt_nerve'], df_vol['vol_pr_nerve'])
 # sm.graphics.mean_diff_plot(df_vol['vol_gt_nerve'], df_vol['vol_pr_nerve'])
 
-plt.show()
+# plt.show()
+
+# Save figure
+plt.savefig(path + filename)
 
 # '''
