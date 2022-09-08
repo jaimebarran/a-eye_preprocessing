@@ -63,7 +63,7 @@ for x in range(bounding_box[0], bounding_box[1]+1):
                 for j in range(len(prob)):
                     # if np.count_nonzero(arr == 1) > 0 : print(f'numpy has counted 1s in arr')
                     prob[j] = np.count_nonzero(arr ==  j+1) / len(arr) # Array of probabilities for each class
-                if prob[0] > 0: print(f'there is lens!')
+                # if prob[0] > 0: print(f'there is lens!')
                 prob_matrix_lens[x,y,z] = prob[0] # np.interp(prob[0], [0,1], [0,9])
                 prob_matrix_globe[x,y,z] = prob[1]
                 prob_matrix_nerve[x,y,z] = prob[2]

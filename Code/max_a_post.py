@@ -47,7 +47,7 @@ for i in range(1, len(rest_subjects)):
                 # Filling the array of transformed probabilities 
                 for j in range(len(prob_arr)):
                     prob_arr[j] = segments[j].get_fdata()[x,y,z]
-                if prob_arr[0] > 0 : print(f'there is lens!')
+                # if prob_arr[0] > 0 : print(f'there is lens!')
 
                 # Maximum a posteriori only in cases > 0
                 if np.any(prob_arr):
