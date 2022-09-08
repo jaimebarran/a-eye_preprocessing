@@ -41,7 +41,7 @@ def dice_norm_metric(ground_truth, predictions):
             fnr = fn / np.sum(gt)
         return dsc_norm # fpr, fnr
 
-# ''' Data frame file generation
+''' Data frame file generation
 base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # GT
 
@@ -490,7 +490,9 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 # '''
 
 # ''' Plot per metric
-df5 = pd.read_csv('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_N5_labels2subject2_GTsubs.csv')
+path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
+filename = 'DSC_nDSC_VolSim_labels2subject.png'
+df5 = pd.read_csv(path + 'sim_metrics_N5_labels2subject_GTsubs.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
@@ -498,8 +500,9 @@ data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_ne
 data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
 
 # Figure 1
-fig, axs = plt.subplots(3)
-fig.suptitle('Similarity metrics N=5')
+fig, axs = plt.subplots(3, figsize=(20,10), sharex=True)
+fig.canvas.set_window_title('Similarity metrics N=5')
+# fig.suptitle('Similarity metrics N=5')
 
 # Boxplot & Swarmplot (points)
 ax1 = sns.boxplot(data=data_dsc, ax=axs[0]).set(ylabel="Value")
@@ -512,10 +515,17 @@ ax3 = sns.swarmplot(data=data_vol, ax=axs[2])
 # Set labels and titles
 ax1.set_xticklabels(['all','lens','globe','nerve','int_fat','ext_fat','lat_mus','med_mus','inf_mus','sup_mus'])
 ax1.set_title('DSC')
+ax1.set_yticks(np.arange(0, 1.1, 0.1))
 ax2.set_title('nDSC')
+ax2.set_yticks(np.arange(0, 1.1, 0.1))
 ax3.set_title('Volume similarity')
+ax3.set_yticks(np.arange(-2, 2.5, 0.5))
 
-plt.show()
+# plt.show()
+
+# Save figure
+plt.savefig(path + filename, bbox_inches='tight')
+
 # '''
 
 ''' Spearman correlation plots and values
