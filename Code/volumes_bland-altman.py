@@ -17,6 +17,7 @@ import nibabel as nb
 ''' Data frame file generation
 pr_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/'
+filename = 'volumes_bland-altman_size_labels2subject2.csv'
 
 # List of best subjects
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
@@ -66,7 +67,7 @@ reader = sitk.ImageFileReader()
 for i in range(len(rest_subjects)):
     
     # Prediction image
-    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject.nii.gz'
+    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz'
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk)
@@ -161,7 +162,7 @@ vals = np.array([rest_subjects, val_vol_pr_all, val_vol_gt_all, val_vol_pr_lens,
                 val_vol_pr_med_mus, val_vol_gt_med_mus, val_vol_pr_inf_mus, val_vol_gt_inf_mus, val_vol_pr_sup_mus, val_vol_gt_sup_mus])
 vals = vals.T
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/volumes_bland-altman_size.csv', 'w') as file:
+with open(pr_dir + filename, 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -170,8 +171,8 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 
 # ''' Bland-Altman plot
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'Volume_difference_Bland-Altman_size_label_vs_image_shared_axis.png'
-df_vol = pd.read_csv(path + 'volumes_bland-altman_size.csv')
+filename = 'Bland-Altman_labels2subject_size_shared_axis.png'
+df_vol = pd.read_csv(path + 'volumes_bland-altman_size_labels2subject.csv')
 
 # Subplots
 k = 1.09 # Figure size to preserve ratio 16:9
@@ -179,69 +180,69 @@ fig, ax = plt.subplots(2, 5, figsize=(16*k, 9*k))
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
 fix_axis = True
-x_right = 0.025
-y_up = 0.02
+x_axis = [0, 0.025]
+y_axis = [-0.0004, 0.02]
 
 # all labels
 sm.graphics.mean_diff_plot(df_vol['vol_pr_all'], df_vol['vol_gt_all'], ax=ax[0][0])
 ax[0][0].set_title('all')
 if fix_axis:
-    ax[0][0].set_xlim([0, x_right])
-    ax[0][0].set_ylim([0, y_up])
+    ax[0][0].set_xlim(x_axis)
+    ax[0][0].set_ylim(y_axis)
 # lens
 sm.graphics.mean_diff_plot(df_vol['vol_pr_lens'], df_vol['vol_gt_lens'], ax=ax[0][1])
 ax[0][1].set_title('lens')
 if fix_axis:
-    ax[0][1].set_xlim([0, x_right])
-    ax[0][1].set_ylim([0, y_up])
+    ax[0][1].set_xlim(x_axis)
+    ax[0][1].set_ylim(y_axis)
 # globe
 sm.graphics.mean_diff_plot(df_vol['vol_pr_globe'], df_vol['vol_gt_globe'], ax=ax[0][2])
 ax[0][2].set_title('globe')
 if fix_axis:
-    ax[0][2].set_xlim([0, x_right])
-    ax[0][2].set_ylim([0, y_up])
+    ax[0][2].set_xlim(x_axis)
+    ax[0][2].set_ylim(y_axis)
 # nerve
 sm.graphics.mean_diff_plot(df_vol['vol_pr_nerve'], df_vol['vol_gt_nerve'], ax=ax[0][3])
 ax[0][3].set_title('nerve')
 if fix_axis:
-    ax[0][3].set_xlim([0, x_right])
-    ax[0][3].set_ylim([0, y_up])
+    ax[0][3].set_xlim(x_axis)
+    ax[0][3].set_ylim(y_axis)
 # int fat
 sm.graphics.mean_diff_plot(df_vol['vol_pr_int_fat'], df_vol['vol_gt_int_fat'], ax=ax[0][4])
 ax[0][4].set_title('int fat')
 if fix_axis:
-    ax[0][4].set_xlim([0, x_right])
-    ax[0][4].set_ylim([0, y_up])
+    ax[0][4].set_xlim(x_axis)
+    ax[0][4].set_ylim(y_axis)
 # ext fat
 sm.graphics.mean_diff_plot(df_vol['vol_pr_ext_fat'], df_vol['vol_gt_ext_fat'], ax=ax[1][0])
 ax[1][0].set_title('ext fat')
 if fix_axis:
-    ax[1][0].set_xlim([0, x_right])
-    ax[1][0].set_ylim([0, y_up])
+    ax[1][0].set_xlim(x_axis)
+    ax[1][0].set_ylim(y_axis)
 # lat mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_lat_mus'], df_vol['vol_gt_lat_mus'], ax=ax[1][1])
 ax[1][1].set_title('lat mus')
 if fix_axis:
-    ax[1][1].set_xlim([0, x_right])
-    ax[1][1].set_ylim([0, y_up])
+    ax[1][1].set_xlim(x_axis)
+    ax[1][1].set_ylim(y_axis)
 # med mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_med_mus'], df_vol['vol_gt_med_mus'], ax=ax[1][2])
 ax[1][2].set_title('med mus')
 if fix_axis:
-    ax[1][2].set_xlim([0, x_right])
-    ax[1][2].set_ylim([0, y_up])
+    ax[1][2].set_xlim(x_axis)
+    ax[1][2].set_ylim(y_axis)
 # inf mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_inf_mus'], df_vol['vol_gt_inf_mus'], ax=ax[1][3])
 ax[1][3].set_title('inf mus')
 if fix_axis:
-    ax[1][3].set_xlim([0, x_right])
-    ax[1][3].set_ylim([0, y_up])
+    ax[1][3].set_xlim(x_axis)
+    ax[1][3].set_ylim(y_axis)
 # sup mus
 sm.graphics.mean_diff_plot(df_vol['vol_pr_sup_mus'], df_vol['vol_gt_sup_mus'], ax=ax[1][4])
 ax[1][4].set_title('sup mus')
 if fix_axis:
-    ax[1][4].set_xlim([0, x_right])
-    ax[1][4].set_ylim([0, y_up])
+    ax[1][4].set_xlim(x_axis)
+    ax[1][4].set_ylim(y_axis)
 
 # plt.tight_layout()
 
