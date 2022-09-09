@@ -17,7 +17,7 @@ import nibabel as nb
 ''' Data frame file generation
 pr_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/'
-filename = 'volumes_bland-altman_size_labels2subject2.csv'
+filename = 'volumes_bland-altman_Zscore_labels2subject.csv'
 
 # List of best subjects
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
@@ -84,65 +84,65 @@ for i in range(len(rest_subjects)):
 
     # LENS
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==1) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==1)
     val_vol_pr_lens[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==1) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==1)
     val_vol_gt_lens[i] = vol_gt
 
     # GLOBE EX LENS
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==2) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==2)
     val_vol_pr_globe[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==2) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==2)
     val_vol_gt_globe[i] = vol_gt
 
     # OPTIC NERVE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==3) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==3)
     val_vol_pr_nerve[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==3) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==3)
     val_vol_gt_nerve[i] = vol_gt
 
     # INTRACONAL FAT
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==4) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==4)
     val_vol_pr_int_fat[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==4) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==4)
     val_vol_gt_int_fat[i] = vol_gt
 
     # EXTRACONAL FAT
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==5) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==5)
     val_vol_pr_ext_fat[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==5) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==5)
     val_vol_gt_ext_fat[i] = vol_gt
 
     # LATERAL RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==6) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==6)
     val_vol_pr_lat_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==6) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==6)
     val_vol_gt_lat_mus[i] = vol_gt
 
     # MEDIAL RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==7) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==7)
     val_vol_pr_med_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==7) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==7)
     val_vol_gt_med_mus[i] = vol_gt
 
     # INFERIOR RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==8) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==8)
     val_vol_pr_inf_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==8) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==8)
     val_vol_gt_inf_mus[i] = vol_gt
 
     # SUPERIOR RECTUS MUSCLE
     # Volume prediction
-    vol_pr = np.count_nonzero(pr_arr==9) / gt_size
+    vol_pr = np.count_nonzero(pr_arr==9)
     val_vol_pr_sup_mus[i] = vol_pr
-    vol_gt = np.count_nonzero(gt_arr==9) / gt_size
+    vol_gt = np.count_nonzero(gt_arr==9)
     val_vol_gt_sup_mus[i] = vol_gt
 
     # ALL LABELS
@@ -152,14 +152,85 @@ for i in range(len(rest_subjects)):
     val_vol_gt_all[i] = (val_vol_gt_lens[i] + val_vol_gt_globe[i] + val_vol_gt_nerve[i] + val_vol_gt_int_fat[i] + val_vol_gt_ext_fat[i] +
                             val_vol_gt_lat_mus[i] + val_vol_gt_med_mus[i] + val_vol_gt_inf_mus[i] + val_vol_gt_sup_mus[i]) / 9
 
+# Z-score
+# All labels
+gt_all_mean = np.mean(val_vol_gt_all)
+gt_all_std = np.std(val_vol_gt_all)
+val_vol_gt_all_z = (val_vol_gt_all - gt_all_mean) / gt_all_std
+pr_all_mean = np.mean(val_vol_pr_all)
+pr_all_std = np.std(val_vol_pr_all)
+val_vol_pr_all_z = (val_vol_pr_all - pr_all_mean) / pr_all_std
+# Lens
+gt_lens_mean = np.mean(val_vol_gt_lens)
+gt_lens_std = np.std(val_vol_gt_lens)
+val_vol_gt_lens_z = (val_vol_gt_lens - gt_lens_mean) / gt_lens_std
+pr_lens_mean = np.mean(val_vol_pr_lens)
+pr_lens_std = np.std(val_vol_pr_lens)
+val_vol_pr_lens_z = (val_vol_pr_lens - pr_lens_mean) / pr_lens_std
+# Globe
+gt_globe_mean = np.mean(val_vol_gt_globe)
+gt_globe_std = np.std(val_vol_gt_globe)
+val_vol_gt_globe_z = (val_vol_gt_globe - gt_globe_mean) / gt_globe_std
+pr_globe_mean = np.mean(val_vol_pr_globe)
+pr_globe_std = np.std(val_vol_pr_globe)
+val_vol_pr_globe_z = (val_vol_pr_globe - pr_globe_mean) / pr_globe_std
+# Optic nerve
+gt_nerve_mean = np.mean(val_vol_gt_nerve)
+gt_nerve_std = np.std(val_vol_gt_nerve)
+val_vol_gt_nerve_z = (val_vol_gt_nerve - gt_nerve_mean) / gt_nerve_std
+pr_nerve_mean = np.mean(val_vol_pr_nerve)
+pr_nerve_std = np.std(val_vol_pr_nerve)
+val_vol_pr_nerve_z = (val_vol_pr_nerve - pr_nerve_mean) / pr_nerve_std
+# Intraconal fat
+gt_int_fat_mean = np.mean(val_vol_gt_int_fat)
+gt_int_fat_std = np.std(val_vol_gt_int_fat)
+val_vol_gt_int_fat_z = (val_vol_gt_int_fat - gt_int_fat_mean) / gt_int_fat_std
+pr_int_fat_mean = np.mean(val_vol_pr_int_fat)
+pr_int_fat_std = np.std(val_vol_pr_int_fat)
+val_vol_pr_int_fat_z = (val_vol_pr_int_fat - pr_int_fat_mean) / pr_int_fat_std
+# Extraconal fat
+gt_ext_fat_mean = np.mean(val_vol_gt_ext_fat)
+gt_ext_fat_std = np.std(val_vol_gt_ext_fat)
+val_vol_gt_ext_fat_z = (val_vol_gt_ext_fat - gt_ext_fat_mean) / gt_ext_fat_std
+pr_ext_fat_mean = np.mean(val_vol_pr_ext_fat)
+pr_ext_fat_std = np.std(val_vol_pr_ext_fat)
+val_vol_pr_ext_fat_z = (val_vol_pr_ext_fat - pr_ext_fat_mean) / pr_ext_fat_std
+# Lateral rectus muscle
+gt_lat_mus_mean = np.mean(val_vol_gt_lat_mus)
+gt_lat_mus_std = np.std(val_vol_gt_lat_mus)
+val_vol_gt_lat_mus_z = (val_vol_gt_lat_mus - gt_lat_mus_mean) / gt_lat_mus_std
+pr_lat_mus_mean = np.mean(val_vol_pr_lat_mus)
+pr_lat_mus_std = np.std(val_vol_pr_lat_mus)
+val_vol_pr_lat_mus_z = (val_vol_pr_lat_mus - pr_lat_mus_mean) / pr_lat_mus_std
+# Medial rectus muscle
+gt_med_mus_mean = np.mean(val_vol_gt_med_mus)
+gt_med_mus_std = np.std(val_vol_gt_med_mus)
+val_vol_gt_med_mus_z = (val_vol_gt_med_mus - gt_med_mus_mean) / gt_med_mus_std
+pr_med_mus_mean = np.mean(val_vol_pr_med_mus)
+pr_med_mus_std = np.std(val_vol_pr_med_mus)
+val_vol_pr_med_mus_z = (val_vol_pr_med_mus - pr_med_mus_mean) / pr_med_mus_std
+# Inferior rectus muscle
+gt_inf_mus_mean = np.mean(val_vol_gt_inf_mus)
+gt_inf_mus_std = np.std(val_vol_gt_inf_mus)
+val_vol_gt_inf_mus_z = (val_vol_gt_inf_mus - gt_inf_mus_mean) / gt_inf_mus_std
+pr_inf_mus_mean = np.mean(val_vol_pr_inf_mus)
+pr_inf_mus_std = np.std(val_vol_pr_inf_mus)
+val_vol_pr_inf_mus_z = (val_vol_pr_inf_mus - pr_inf_mus_mean) / pr_inf_mus_std
+# Superior rectus muscle
+gt_sup_mus_mean = np.mean(val_vol_gt_sup_mus)
+gt_sup_mus_std = np.std(val_vol_gt_sup_mus)
+val_vol_gt_sup_mus_z = (val_vol_gt_sup_mus - gt_sup_mus_mean) / gt_sup_mus_std
+pr_sup_mus_mean = np.mean(val_vol_pr_sup_mus)
+pr_sup_mus_std = np.std(val_vol_pr_sup_mus)
+val_vol_pr_sup_mus_z = (val_vol_pr_sup_mus - pr_sup_mus_mean) / pr_sup_mus_std
 
 # Save values to a csv
 metrics = ['Subject','vol_pr_all','vol_gt_all','vol_pr_lens','vol_gt_lens','vol_pr_globe','vol_gt_globe','vol_pr_nerve','vol_gt_nerve',
             'vol_pr_int_fat','vol_gt_int_fat','vol_pr_ext_fat','vol_gt_ext_fat','vol_pr_lat_mus','vol_gt_lat_mus','vol_pr_med_mus','vol_gt_med_mus',
             'vol_pr_inf_mus','vol_gt_inf_mus','vol_pr_sup_mus','vol_gt_sup_mus']
-vals = np.array([rest_subjects, val_vol_pr_all, val_vol_gt_all, val_vol_pr_lens, val_vol_gt_lens, val_vol_pr_globe, val_vol_gt_globe, val_vol_pr_nerve,
-                val_vol_gt_nerve,val_vol_pr_int_fat, val_vol_gt_int_fat, val_vol_pr_ext_fat, val_vol_gt_ext_fat, val_vol_pr_lat_mus, val_vol_gt_lat_mus,
-                val_vol_pr_med_mus, val_vol_gt_med_mus, val_vol_pr_inf_mus, val_vol_gt_inf_mus, val_vol_pr_sup_mus, val_vol_gt_sup_mus])
+vals = np.array([rest_subjects, val_vol_pr_all_z, val_vol_gt_all_z, val_vol_pr_lens_z, val_vol_gt_lens_z, val_vol_pr_globe_z, val_vol_gt_globe_z, val_vol_pr_nerve_z,
+                val_vol_gt_nerve_z,val_vol_pr_int_fat_z, val_vol_gt_int_fat_z, val_vol_pr_ext_fat_z, val_vol_gt_ext_fat_z, val_vol_pr_lat_mus_z, val_vol_gt_lat_mus_z,
+                val_vol_pr_med_mus_z, val_vol_gt_med_mus_z, val_vol_pr_inf_mus_z, val_vol_gt_inf_mus_z, val_vol_pr_sup_mus_z, val_vol_gt_sup_mus_z])
 vals = vals.T
 
 with open(pr_dir + filename, 'w') as file:
@@ -171,15 +242,15 @@ with open(pr_dir + filename, 'w') as file:
 
 # ''' Bland-Altman plot
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'Bland-Altman_labels2subject_size_shared_axis.png'
-df_vol = pd.read_csv(path + 'volumes_bland-altman_size_labels2subject.csv')
+filename = 'Bland-Altman_labels2subject_Zscore.png'
+df_vol = pd.read_csv(path + 'volumes_bland-altman_Zscore_labels2subject.csv')
 
 # Subplots
 k = 1.09 # Figure size to preserve ratio 16:9
 fig, ax = plt.subplots(2, 5, figsize=(16*k, 9*k))
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
-fix_axis = True
+fix_axis = False
 x_axis = [0, 0.035]
 y_axis = [-0.00175, 0.035]
 
