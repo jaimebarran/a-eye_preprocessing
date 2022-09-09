@@ -148,9 +148,9 @@ for i in range(len(rest_subjects)):
     # ALL LABELS
     # Volume structure
     val_vol_pr_all[i] = (val_vol_pr_lens[i] + val_vol_pr_globe[i] + val_vol_pr_nerve[i] + val_vol_pr_int_fat[i] + val_vol_pr_ext_fat[i] +
-                            val_vol_pr_lat_mus[i] + val_vol_pr_med_mus[i] + val_vol_pr_inf_mus[i] + val_vol_pr_sup_mus[i]) /9
+                            val_vol_pr_lat_mus[i] + val_vol_pr_med_mus[i] + val_vol_pr_inf_mus[i] + val_vol_pr_sup_mus[i]) / 9
     val_vol_gt_all[i] = (val_vol_gt_lens[i] + val_vol_gt_globe[i] + val_vol_gt_nerve[i] + val_vol_gt_int_fat[i] + val_vol_gt_ext_fat[i] +
-                            val_vol_gt_lat_mus[i] + val_vol_gt_med_mus[i] + val_vol_gt_inf_mus[i] + val_vol_gt_sup_mus[i]) /9
+                            val_vol_gt_lat_mus[i] + val_vol_gt_med_mus[i] + val_vol_gt_inf_mus[i] + val_vol_gt_sup_mus[i]) / 9
 
 
 # Save values to a csv
@@ -180,8 +180,8 @@ fig, ax = plt.subplots(2, 5, figsize=(16*k, 9*k))
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
 fix_axis = True
-x_axis = [0, 0.025]
-y_axis = [-0.0004, 0.02]
+x_axis = [0, 0.035]
+y_axis = [-0.00175, 0.035]
 
 # all labels
 sm.graphics.mean_diff_plot(df_vol['vol_pr_all'], df_vol['vol_gt_all'], ax=ax[0][0])
