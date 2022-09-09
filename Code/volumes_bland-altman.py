@@ -13,8 +13,8 @@ import statsmodels.api as sm
 import pyCompare as pc
 import nibabel as nb
 
-
 ''' Data frame file generation
+
 pr_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/'
 filename = 'volumes_bland-altman_Zscore_labels2subject.csv'
@@ -67,7 +67,7 @@ reader = sitk.ImageFileReader()
 for i in range(len(rest_subjects)):
     
     # Prediction image
-    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz'
+    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject.nii.gz'
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk)
@@ -242,17 +242,17 @@ with open(pr_dir + filename, 'w') as file:
 
 # ''' Bland-Altman plot
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'Bland-Altman_labels2subject_Zscore.png'
-df_vol = pd.read_csv(path + 'volumes_bland-altman_Zscore_labels2subject.csv')
+filename = 'Bland-Altman_labels2subject2_Zscore.png'
+df_vol = pd.read_csv(path + 'volumes_bland-altman_Zscore_labels2subject2.csv')                                              
 
 # Subplots
 k = 1.09 # Figure size to preserve ratio 16:9
 fig, ax = plt.subplots(2, 5, figsize=(16*k, 9*k))
 fig.canvas.set_window_title('Volume difference - Bland-Altman plots')
 # fig.suptitle('Volume difference')
-fix_axis = False
-x_axis = [0, 0.035]
-y_axis = [-0.00175, 0.035]
+fix_axis = True
+x_axis = [-2, 2]
+y_axis = [-2.5, 3.5]
 
 # all labels
 sm.graphics.mean_diff_plot(df_vol['vol_pr_all'], df_vol['vol_gt_all'], ax=ax[0][0])
