@@ -55,4 +55,4 @@ for i in range(1, len(rest_subjects)):
     
     # Transform matrix to image and save file
     nii = nb.Nifti1Image(result_im, segments[0].affine, header)
-    nii.to_filename(base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz')
+    # nii.to_filename(base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz')

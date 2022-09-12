@@ -41,7 +41,7 @@ def dice_norm_metric(ground_truth, predictions):
             fnr = fn / np.sum(gt)
         return dsc_norm # fpr, fnr
 
-''' Data frame file generation
+# ''' Data frame file generation
 base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # GT
 
@@ -146,30 +146,6 @@ for i in range(len(rest_subjects)):
     reader.SetFileName(gt_path)
     gt_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     gt_arr = sitk.GetArrayFromImage(gt_sitk) # en numpy format
-
-    # # ALL LABELS
-    # # Measures Image Filter 
-    # overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
-    # overlap_measures_filter.Execute(gt_sitk, pr_sitk)
-    # # DSC
-    # dsc = overlap_measures_filter.GetDiceCoefficient() # Get the mean overlap (Dice coefficient) over all labels
-    # val_dsc[i] = dsc
-    # # Volume
-    # vol = overlap_measures_filter.GetVolumeSimilarity() # Get the volume similarity over all labels
-    # val_vol[i] = vol
-    # # Hausdorff distance
-    # hausdorf = sitk.HausdorffDistanceImageFilter()
-    # hausdorf.Execute(gt_sitk, pr_sitk)
-    # # hausdorf_distance = hausdorf.GetHausdorffDistance()
-    # # val_hau[i] = hausdorf_distance
-    # hausdorf_distance_avg = hausdorf.GetAverageHausdorffDistance() # Return the computed Hausdorff distance
-    # val_hau_avg[i] = hausdorf_distance_avg
-    # # nDSC
-    # nDSC = dice_norm_metric(gt_arr!=0, pr_arr!=0)
-    # val_ndsc[i] = nDSC
-    # # Volume structure
-    # size = np.count_nonzero(pr_arr) / pr_size
-    # val_size[i] = size
 
     # LENS
     # Measures Image Filter 
@@ -482,7 +458,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_N5_labels2subject2_GTsubs.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_labels2subject2.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -491,8 +467,8 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 
 # ''' Plot per metric
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'DSC_nDSC_VolSim_labels2subject.png'
-df5 = pd.read_csv(path + 'sim_metrics_N5_labels2subject_GTsubs.csv')
+filename = 'DSC_nDSC_VolSim_labels2subject2.png'
+df5 = pd.read_csv(path + 'sim_metrics_labels2subject2.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
@@ -521,10 +497,10 @@ ax2.set_yticks(np.arange(0, 1.1, 0.1))
 ax3.set_title('Volume similarity')
 ax3.set_yticks(np.arange(-2, 2.5, 0.5))
 
-# plt.show()
+plt.show()
 
 # Save figure
-plt.savefig(path + filename, bbox_inches='tight')
+# plt.savefig(path + filename, bbox_inches='tight')
 
 # '''
 

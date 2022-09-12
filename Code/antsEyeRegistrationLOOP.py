@@ -132,7 +132,7 @@ for i in range(len(rest_subjects)):
     # ApplyTransforms (for cropped images) with inverse transform to get the template labels into subject space
     command2 = 'antsApplyTransforms -d 3 ' + \
     ' -i ' +  template_labels_cropped + \
-    ' -o ' +  output_reg_cropped_path + 'supmusfat2subject.nii.gz' + \
+    ' -o ' +  output_reg_cropped_path + 'supmus2subject.nii.gz' + \
     ' -r ' +  input_t1_cropped + \
     ' -t ' + '[' + warp_paths + '0GenericAffine.mat, 1 ]' + \
     ' -t ' + warp_paths + '1InverseWarp.nii.gz' + \
@@ -141,7 +141,7 @@ for i in range(len(rest_subjects)):
     os.system(command2)
 
     # Dealing with files in that folder
-    # for f in glob.glob(output_reg_cropped_path + 'labels2subject2_uint8.nii.gz'):
+    # for f in glob.glob(output_reg_cropped_path + '2subject.nii.gz'):
     #     os.remove(f)
 
 # '''
