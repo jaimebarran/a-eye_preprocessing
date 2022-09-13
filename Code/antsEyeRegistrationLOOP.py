@@ -6,12 +6,12 @@ base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/'
 # eye_mask_mni = '/mnt/sda1/ANTs/input/mni152/tpl-MNI152NLin2009cAsym_res-01_desc-eye_mask.nii.gz'
 # template_cc = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0.nii.gz'
 template_cc_cropped = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/template0_cropped_15vox.nii.gz'
-template_labels_cropped = base_dir + 'best_subjects_eye_cc/CustomTemplate_5_n1/Probability_Maps/Per_Class/prob_map_cropped_preMaxAPost_sup_mus.nii.gz'
+template_labels_cropped = base_dir + 'best_subjects_eye_cc/CustomTemplate_5_n1/Probability_Maps/prob_map_cropped_th0_2.nii.gz'
 
 # List of best subjects to do the registration
-best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
+# best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-30','sub-33','sub-34'] # 7
-# best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
 
 # List of remaining subjects
 all_subjects = list()
@@ -24,7 +24,7 @@ rest_subjects = [elem for elem in all_subjects if elem not in best_subjects_cc]
 # best_subjects_cc = ['sub-15','sub-19','sub-21','sub-23','sub-26']
 # worst_subjects_cc = ['sub-15','sub-19','sub-21','sub-23','sub-26','sub-17','sub-16','sub-28','sub-10'] # 9
 
-# ''' Loop for best subjects
+''' Loop for best subjects
 j = 0
 # antsEyeExtraction and antsApplyTransforms
 for i in range(len(best_subjects_cc)):
@@ -95,15 +95,15 @@ for i in range(len(best_subjects_cc)):
     os.system(command2)
 # '''
 
-''' Loop for the rest of the subjects
+# ''' Loop for the rest of the subjects
 # antsRegistrationSyN and antsApplyTransforms
-# for i in range(len(rest_subjects)):
+for i in range(len(rest_subjects)):
     # input_t1 = base_dir + 'best_subjects_eye_cc/' + best_subjects_cc[i] + '_T1_aff.nii.gz'
     # input_labels = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels.nii.gz'
     input_t1_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_T1_cropped.nii.gz'
     # input_labels_cropped = base_dir + 'a123/' + rest_subjects[i] + '/input/' + rest_subjects[i] + '_labels_cropped.nii.gz'
     output = base_dir +  'best_subjects_eye_cc/CustomTemplate_5_n1/reg_cropped_other_subjects/' # Change this when doing new extractions
-    output_reg_cropped_path = output + rest_subjects[i] + '_reg_cropped/Per_Class/'
+    output_reg_cropped_path = output + rest_subjects[i] + '_reg_cropped/'
     warp_paths = output + rest_subjects[i] + '_reg_cropped/'
     if not os.path.exists(output_reg_cropped_path):
         os.makedirs(output_reg_cropped_path)
@@ -132,8 +132,9 @@ for i in range(len(best_subjects_cc)):
     # ApplyTransforms (for cropped images) with inverse transform to get the template labels into subject space
     command2 = 'antsApplyTransforms -d 3 ' + \
     ' -i ' +  template_labels_cropped + \
-    ' -o ' +  output_reg_cropped_path + 'supmus2subject.nii.gz' + \
+    ' -o ' +  output_reg_cropped_path + 'labels2subject3.nii.gz' + \
     ' -r ' +  input_t1_cropped + \
+    ' -n ' + 'MultiLabel' + \
     ' -t ' + '[' + warp_paths + '0GenericAffine.mat, 1 ]' + \
     ' -t ' + warp_paths + '1InverseWarp.nii.gz' + \
     ' --float 0 --verbose 1'

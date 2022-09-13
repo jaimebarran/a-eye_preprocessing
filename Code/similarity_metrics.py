@@ -41,7 +41,7 @@ def dice_norm_metric(ground_truth, predictions):
             fnr = fn / np.sum(gt)
         return dsc_norm # fpr, fnr
 
-# ''' Data frame file generation
+''' Data frame file generation
 base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # GT
 
@@ -135,7 +135,7 @@ reader = sitk.ImageFileReader()
 for i in range(len(rest_subjects)):
 
     # Prediction image to compare to GT
-    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz' # Labels' image to compare to GT
+    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject3.nii.gz' # Labels' image to compare to GT
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk) # in numpy format
@@ -406,20 +406,6 @@ for i in range(len(rest_subjects)):
     # val_ndsc_muscles[i] = nDSC
 
 # Save values to a csv
-# metrics = ['Subject','DSC', 'Hausdorff', 'Hausdorff_avg']
-# metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'DSC_globe', 'Haus_avg_globe', 'Volume_globe',
-#             'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'DSC_fats', 'Haus_avg_fats', 'Volume_fats', 'DSC_muscles', 'Haus_avg_muscles', 'Volume_muscles']
-# metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'DSC_globe', 'Haus_avg_globe', 'Volume_globe',
-#             'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'DSC_int_fat', 'Haus_avg_int_fat', 'Volume_int_fat', 'DSC_ext_fat', 'Haus_avg_ext_fat', 'Volume_ext_fat',
-#             'DSC_lat_mus', 'Haus_avg_lat_mus', 'Volume_lat_mus', 'DSC_med_mus', 'Haus_avg_med_mus', 'Volume_med_mus', 'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus',
-#             'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus']
-# metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'DSC_globe', 'Haus_avg_globe', 
-#             'Volume_globe', 'nDSC_globe', 'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'DSC_fats', 'Haus_avg_fats', 'Volume_fats', 'nDSC_fats',
-#             'DSC_muscles', 'Haus_avg_muscles', 'Volume_muscles', 'nDSC_muscles']
-# metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'DSC_globe', 'Haus_avg_globe', 'Volume_globe',
-#             'nDSC_globe', 'DSC_nerve', 'Haus_avg_nerve', 'Volume_nerve', 'nDSC_nerve', 'DSC_int_fat', 'Haus_avg_int_fat', 'Volume_int_fat', 'nDSC_int_fat', 'DSC_ext_fat',
-#             'Haus_avg_ext_fat', 'Volume_ext_fat', 'nDSC_ext_fat', 'DSC_lat_mus', 'Haus_avg_lat_mus', 'Volume_lat_mus', 'nDSC_lat_mus', 'DSC_med_mus', 'Haus_avg_med_mus',
-#             'Volume_med_mus', 'nDSC_med_mus', 'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus', 'nDSC_inf_mus', 'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus', 'nDSC_sup_mus']
 metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'Size_all', 
             'DSC_lens', 'Haus_avg_lens', 'Volume_lens', 'nDSC_lens', 'Size_lens',
             'DSC_globe', 'Haus_avg_globe', 'Volume_globe', 'nDSC_globe', 'Size_globe',
@@ -430,20 +416,6 @@ metrics = ['Subject', 'DSC_all', 'Haus_avg_all', 'Volume_all', 'nDSC_all', 'Size
             'DSC_med_mus', 'Haus_avg_med_mus', 'Volume_med_mus', 'nDSC_med_mus', 'Size_med_mus',
             'DSC_inf_mus', 'Haus_avg_inf_mus', 'Volume_inf_mus', 'nDSC_inf_mus', 'Size_inf_mus',
             'DSC_sup_mus', 'Haus_avg_sup_mus', 'Volume_sup_mus', 'nDSC_sup_mus', 'Size_sup_mus']
-# print(val_dsc[0], val_hau[0], val_hau_avg[0])
-# vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
-#                 val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_dsc_fats, val_hau_avg_fats, val_vol_fats, val_dsc_muscles, val_hau_avg_muscles, val_vol_muscles])
-# vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
-#                 val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_dsc_int_fat, val_hau_avg_int_fat, val_vol_int_fat, val_dsc_ext_fat, val_hau_avg_ext_fat, val_vol_ext_fat,
-#                 val_dsc_lat_mus, val_hau_avg_lat_mus, val_vol_lat_mus, val_dsc_med_mus, val_hau_avg_med_mus, val_vol_med_mus, val_dsc_inf_mus, val_hau_avg_inf_mus, val_vol_inf_mus,
-#                 val_dsc_sup_mus, val_hau_avg_sup_mus, val_vol_sup_mus])
-# vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_dsc_globe, val_hau_avg_globe, 
-#                 val_vol_globe, val_ndsc_globe, val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_dsc_fats, val_hau_avg_fats, val_vol_fats, val_ndsc_fats,
-#                 val_dsc_muscles, val_hau_avg_muscles, val_vol_muscles, val_ndsc_muscles])
-# vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_dsc_globe, val_hau_avg_globe, val_vol_globe,
-#                 val_ndsc_globe, val_dsc_nerve, val_hau_avg_nerve, val_vol_nerve, val_ndsc_nerve, val_dsc_int_fat, val_hau_avg_int_fat, val_vol_int_fat, val_ndsc_int_fat, val_dsc_ext_fat,
-#                 val_hau_avg_ext_fat, val_vol_ext_fat, val_ndsc_ext_fat, val_dsc_lat_mus, val_hau_avg_lat_mus, val_vol_lat_mus, val_ndsc_lat_mus, val_dsc_med_mus, val_hau_avg_med_mus,
-#                 val_vol_med_mus, val_ndsc_med_mus, val_dsc_inf_mus, val_hau_avg_inf_mus, val_vol_inf_mus, val_ndsc_inf_mus, val_dsc_sup_mus, val_hau_avg_sup_mus, val_vol_sup_mus, val_ndsc_sup_mus])
 vals = np.array([rest_subjects, val_dsc, val_hau_avg, val_vol, val_ndsc, val_size,
                 val_dsc_lens, val_hau_avg_lens, val_vol_lens, val_ndsc_lens, val_size_lens,
                 val_dsc_globe, val_hau_avg_globe, val_vol_globe, val_ndsc_globe, val_size_globe,
@@ -458,7 +430,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_labels2subject2.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_labels2subject3.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -467,8 +439,8 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 
 # ''' Plot per metric
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'DSC_nDSC_VolSim_labels2subject2.png'
-df5 = pd.read_csv(path + 'sim_metrics_labels2subject2.csv')
+filename = 'DSC_nDSC_VolSim_labels2subject3.png'
+df5 = pd.read_csv(path + 'sim_metrics_labels2subject3.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
@@ -497,10 +469,10 @@ ax2.set_yticks(np.arange(0, 1.1, 0.1))
 ax3.set_title('Volume similarity')
 ax3.set_yticks(np.arange(-2, 2.5, 0.5))
 
-plt.show()
+# plt.show()
 
 # Save figure
-# plt.savefig(path + filename, bbox_inches='tight')
+plt.savefig(path + filename, bbox_inches='tight')
 
 # '''
 
