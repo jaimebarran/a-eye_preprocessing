@@ -20,13 +20,13 @@ rest_subjects = [elem for elem in all_subjects if elem not in best_subjects_cc]
 labels = ['lens','globe','nerve','intfat','extfat','latmus','medmus','infmus','supmus']
 
 # ''' Loop of subjects
-for i in range(1, len(rest_subjects)):
+for i in range(0, len(rest_subjects)):
 # for i in range(0,1):
 
     # Header from labels
     segments = []
     for l in range(0, len(labels)):
-        subject_labels_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/Per_Class/' + labels[l] + '2subject.nii.gz'
+        subject_labels_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/Per_Class_2/' + labels[l] + '2subject.nii.gz'
         # print(subject_labels_path)
         sub_lab = nb.load(Path(subject_labels_path))
         segments.append(sub_lab)
@@ -55,4 +55,4 @@ for i in range(1, len(rest_subjects)):
     
     # Transform matrix to image and save file
     nii = nb.Nifti1Image(result_im, segments[0].affine, header)
-    # nii.to_filename(base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject2.nii.gz')
+    nii.to_filename(base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject4.nii.gz')
