@@ -9,13 +9,14 @@ base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/
 # List of best subjects to do the registration
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-30','sub-33','sub-34'] # 7
-best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+# best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+rest_subjects = ['sub-08','sub-09','sub-30','sub-34']
 
 # List of remaining subjects
-all_subjects = list()
-for i in range(35):
-    all_subjects.append('sub-'+str(i+1).zfill(2))
-rest_subjects = [elem for elem in all_subjects if elem not in best_subjects_cc]
+# all_subjects = list()
+# for i in range(35):
+#     all_subjects.append('sub-'+str(i+1).zfill(2))
+# rest_subjects = [elem for elem in all_subjects if elem not in best_subjects_cc]
 
 labels = ['lens','globe','nerve','intfat','extfat','latmus','medmus','infmus','supmus']
 
