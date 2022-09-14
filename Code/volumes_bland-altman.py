@@ -17,12 +17,12 @@ import nibabel as nb
 
 pr_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
 gt_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/'
-filename = 'volumes_bland-altman_Zscore_labels2subject4.csv'
+filename = 'volumes_bland-altman_Zscore_labels2subject3_N5.csv'
 
 # List of best subjects
-# best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
+best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-33'] # 5
 # best_subjects_cc = ['sub-02','sub-03','sub-20','sub-29','sub-30','sub-33','sub-34'] # 7
-best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
+# best_subjects_cc = ['sub-02','sub-03','sub-08','sub-09','sub-20','sub-29','sub-30','sub-33','sub-34'] # 9
 
 # List of remaining subjects
 all_subjects = list()
@@ -67,7 +67,7 @@ reader = sitk.ImageFileReader()
 for i in range(len(rest_subjects)):
     
     # Prediction image
-    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject4.nii.gz'
+    pr_path = pr_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject3.nii.gz'
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk)
@@ -242,8 +242,8 @@ with open(pr_dir + filename, 'w') as file:
 
 # ''' Bland-Altman plot
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'Bland-Altman_labels2subject4_Zscore_shared_axis.png'
-df_vol = pd.read_csv(path + 'volumes_bland-altman_Zscore_labels2subject4.csv')                                              
+filename = 'Bland-Altman_labels2subject3_Zscore_shared_axis_N5.png'
+df_vol = pd.read_csv(path + 'volumes_bland-altman_Zscore_labels2subject3_N5.csv')                                              
 
 # Subplots
 k = 1.09 # Figure size to preserve ratio 16:9
