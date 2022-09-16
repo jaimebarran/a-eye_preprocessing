@@ -135,7 +135,7 @@ reader = sitk.ImageFileReader()
 for i in range(len(rest_subjects)):
 
     # Prediction image to compare to GT
-    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject4.nii.gz' # Labels' image to compare to GT
+    pr_path = base_dir + 'reg_cropped_other_subjects/' + rest_subjects[i] + '_reg_cropped/labels2subject3.nii.gz' # Labels' image to compare to GT
     reader.SetFileName(pr_path)
     pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
     pr_arr = sitk.GetArrayFromImage(pr_sitk) # in numpy format
@@ -430,7 +430,7 @@ vals = vals.T
 # print(vals)
 # print(f"type: {vals.dtype}, shape: {vals.shape}")
 
-with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_labels2subject4_N5.csv', 'w') as file:
+with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/sim_metrics_labels2subject3_N5.csv', 'w') as file:
     writer = csv.writer(file)
     writer.writerow(metrics)
     writer.writerows(vals)
@@ -439,16 +439,17 @@ with open('/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/C
 
 # ''' Plot per metric
 path = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/'
-filename = 'DSC_nDSC_VolSim_labels2subject4_N5.png'
-df5 = pd.read_csv(path + 'sim_metrics_labels2subject4_N5.csv')
+filename = 'DSC_nDSC_VolSim_Haus_labels2subject3_N5.png'
+df5 = pd.read_csv(path + 'sim_metrics_labels2subject3_N5.csv')
 
 # # Dataframes {DSC, nDSC, Volume (voxels)} separate labels for N=5 only
 data_dsc = [df5['DSC_all'], df5['DSC_lens'], df5['DSC_globe'], df5['DSC_nerve'], df5['DSC_int_fat'], df5['DSC_ext_fat'], df5['DSC_lat_mus'], df5['DSC_med_mus'], df5['DSC_inf_mus'], df5['DSC_sup_mus']]
 data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_nerve'], df5['nDSC_int_fat'], df5['nDSC_ext_fat'], df5['nDSC_lat_mus'], df5['nDSC_med_mus'], df5['nDSC_inf_mus'], df5['nDSC_sup_mus']]
 data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
+data_haus = [df5['Haus_avg_all'], df5['Haus_avg_lens'], df5['Haus_avg_globe'], df5['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df5['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus']]
 
 # Figure 1
-fig, axs = plt.subplots(3, figsize=(20,10), sharex=True)
+fig, axs = plt.subplots(4, figsize=(20,10), sharex=True)
 fig.canvas.set_window_title('Similarity metrics N=5')
 # fig.suptitle('Similarity metrics N=5')
 
@@ -459,6 +460,8 @@ ax2 = sns.boxplot(data=data_ndsc, ax=axs[1]).set(ylabel="Value")
 ax2 = sns.swarmplot(data=data_ndsc, ax=axs[1])
 ax3 = sns.boxplot(data=data_vol, ax=axs[2]).set(ylabel="Value")
 ax3 = sns.swarmplot(data=data_vol, ax=axs[2])
+ax4 = sns.boxplot(data=data_haus, ax=axs[3]).set(ylabel="Value")
+ax4 = sns.swarmplot(data=data_haus, ax=axs[3])
 
 # Set labels and titles
 ax1.set_xticklabels(['all','lens','globe','nerve','int_fat','ext_fat','lat_mus','med_mus','inf_mus','sup_mus'])
@@ -468,6 +471,8 @@ ax2.set_title('nDSC')
 ax2.set_yticks(np.arange(0, 1.1, 0.1))
 ax3.set_title('Volume similarity')
 ax3.set_yticks(np.arange(-2, 2.5, 0.5))
+ax4.set_title('Hausdorff distance')
+ax4.set_yticks(np.arange(0, 1.7, 0.2))
 
 # plt.show()
 
