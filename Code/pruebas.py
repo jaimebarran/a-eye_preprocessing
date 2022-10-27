@@ -1,74 +1,57 @@
 import numpy as np
+import os,sys
 import nibabel as nib
 import SimpleITK as sitk
+import pandas as pd
 
-base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/best_subjects_eye_cc/CustomTemplate_5_n1/' # {1, 5, 7, 9}
-gt_path = base_dir + 'Probability_Maps/prob_map_cropped_th0.nii.gz' # GT
-pr_path = base_dir + 'reg_cropped_other_subjects/sub-01_reg_cropped/labels2template.nii.gz' # Labels' image to compare to GT
+# Paths
+main_path = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/'
+input_image_path = main_path + 'non_labeled_dataset_nifti/' # TODO: change to non_labeled_dataset_nifti_reg
+input_label_path = main_path + 'non_labeled_dataset_nifti_cropped_reg/'
+output_path = main_path + 'non_labeled_dataset_nifti_cropped/'
 
-# forma 1 --> works
-# gt_im = nib.load(gt_path)
-# pr_im = nib.load(pr_path)
-# gt_arr = np.array(gt_im.dataobj)
-# pr_arr = np.array(pr_im.dataobj)
+i=0
+for folder1 in sorted(os.listdir(input_image_path)):
+    image_path = input_image_path + folder1 + '/' + folder1 + '.nii.gz' # image
+    labels_path = input_label_path + folder1 + '/labels.nii.gz' # labels
+    bound = 15 # boundary for the bounding box (margins)
 
-# forma 2 --> doesn't work --> do GetArrayFromImage() instead
-reader = sitk.ImageFileReader()
-reader.SetFileName(gt_path)
-gt_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
-reader.SetFileName(pr_path)
-pr_sitk = sitk.Cast(reader.Execute(), sitk.sitkUInt8)
+    image = sitk.ReadImage(image_path)
+    all_segments = sitk.ReadImage(labels_path)
+    image_x_size, image_y_size, image_z_size = image.GetSize()
+    print(f"image_x_size {image_x_size} image_y_size {image_y_size} image_z_size{image_z_size}")
 
-# forma 3 --> funciona
-gt_arr = sitk.GetArrayFromImage(gt_sitk)
-pr_arr = sitk.GetArrayFromImage(pr_sitk)
+    # Mask
+    all_segments_mask = all_segments > 0
+    # sitk.WriteImage(all_segments_mask, base_dir+folder+'/input/'+folder+'_labels_mask.nii.gz')
 
-print(f'gt_arr: {gt_arr.shape}, pr_arr: {pr_arr.shape}')
-print(f'gt: {np.count_nonzero(gt_arr==1)}, pr: {np.count_nonzero(pr_arr==1)}')
+    # Bounding box
+    lsif = sitk.LabelStatisticsImageFilter() # It requires intensity and label images
+    lsif.Execute(image, all_segments_mask) # Mask! Where all the labels are 1!
+    bounding_box = np.array(lsif.GetBoundingBox(1)) # GetBoundingBox(label)
+    print(f"Bounding box:  {bounding_box}") # [xmin, xmax, ymin, ymax, zmin, zmax]
+    bounding_box_expanded = bounding_box.copy()
+    bounding_box_expanded[0::2] -= bound # even indexes
+    bounding_box_expanded[1::2] += bound # odd indexes
+    print(f"Expanded bounding box: {bounding_box_expanded}")
 
-def dice_norm_metric(ground_truth, predictions):
-    '''
-    For a single example returns DSC_norm, fpr, fnr
-    '''
+    # Limits
+    if bounding_box_expanded[0] < 0: bounding_box_expanded[0] = 0
+    if bounding_box_expanded[1] > image_x_size: bounding_box_expanded[1] = image_x_size
+    if bounding_box_expanded[2] < 0: bounding_box_expanded[2] = 0
+    if bounding_box_expanded[3] > image_y_size: bounding_box_expanded[3] = image_y_size
+    if bounding_box_expanded[4] < 0: bounding_box_expanded[4] = 0
+    if bounding_box_expanded[5] > image_z_size: bounding_box_expanded[5] = image_z_size
+    print(f"Expanded bounding box after limits: {bounding_box_expanded}")
 
-    # Reference for normalized DSC
-    r = 0.001
-    # Cast to float32 type
-    gt = ground_truth.astype("float32")
-    seg = predictions.astype("float32")
-    im_sum = np.sum(seg) + np.sum(gt)
-    if im_sum == 0:
-        return 1.0, 1.0, 1.0
-    else:
-        if np.sum(gt) == 0:
-            k = 1.0
-        else:
-            k = (1 - r) * np.sum(gt) / (r * (len(gt.flatten()) - np.sum(gt)))
-            print(f'np.sum(gt)={np.sum(gt)}, len(gt.flatten())={len(gt.flatten())}')
-        tp = np.sum(seg[gt == 1])
-        print(f'tp: {tp}')
-        fp = np.sum(seg[gt == 0])
-        print(f'fp: {fp}')
-        fn = np.sum(gt[seg == 0])
-        print(f'fn: {fn}')
-        fp_scaled = k * fp
-        print(f'fp_scaled: {fp_scaled}')
-        dsc_norm = 2 * tp / (fp_scaled + 2 * tp + fn)
+    # Crop
+    image_crop = image[int(bounding_box_expanded[0]):int(bounding_box_expanded[1]), # x
+                    int(bounding_box_expanded[2]):int(bounding_box_expanded[3]), # y
+                    int(bounding_box_expanded[4]):int(bounding_box_expanded[5])] # z
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    sitk.WriteImage(image_crop, output_path + folder1 + '_cropped.nii.gz')
 
-        dsc = 2 * tp / (fp + 2 * tp + fn)
-
-        fpr = fp / (len(gt.flatten()) - np.sum(gt))
-        if np.sum(gt) == 0:
-            fnr = 1.0
-        else:
-            fnr = fn / np.sum(gt)
-        return dsc_norm, dsc # fpr, fnr
-
-gt_mask = gt_arr != 0
-pr_mask = pr_arr != 0
-# print(f'gt_mask: {gt_mask.shape}, pr_mask: {pr_mask.shape}')
-
-# gt_mask = gt_arr==4 or gt_arr==5
-# pr_mask = pr_arr==4 or gt_arr==5
-
-print(f'ndsc vs dsc: {dice_norm_metric( gt_arr==1, pr_arr==1 )}')
+    i+=1
+    if (i==10):
+        break     

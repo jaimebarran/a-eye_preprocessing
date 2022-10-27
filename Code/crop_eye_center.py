@@ -47,28 +47,32 @@ def cropVolumeImage(image,x,y,z,border1,border2,border3):
 if __name__ == "__main__":
     #argv list: MriFile(.nii), scleraFile(.nii), size, output
 
+    main_path = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/'
     # mask filenames as second column.
-    csv_path = './Data/idx_Soenke.csv'
+    csv_path = '/mnt/sda1/Ocular_tumor_detection/MainProcess/PythonCode/1.Pre-process/Data/idx1.csv' #main_path + 'idx1.csv'
     # Path to the folder with images. Images will be read from path + path_from_csv
-    path = csv_path[:csv_path.rfind('/')] + '/'
+    path = csv_path[:csv_path.rfind('/')] + '/' #+ '/'
+    print(path)
     df = pd.read_csv(csv_path)
     for i, item in df.iterrows():
-        if (item[0][0:1]=="E") or(item[0][0:1]=="P"):
+        # if (item[0][0:1]=="E") or(item[0][0:1]=="P"):
             if(numpy.isnan(item[1]) == False):
-                mriFile  = "/T1.nii.gz"
-                x = item[1]
-                y = item[2]
-                z = item[3]
+                mriFile  = "/T1.nii.gz" #main_path + 'non_labeled_dataset_nifti/'
+                print(sys.argv[1]+mriFile)
+    #             x = item[1]
+    #             y = item[2]
+    #             z = item[3]
                 
-                # image = sitk.ReadImage(sys.argv[1]+item[0]+mriFile)
-                image = sitk.ReadImage(sys.argv[1]+mriFile)
-                # directory = "./Output/OnlyEyeRegion/"+item[0]
-                directory = "./Output/OnlyEyeRegion/"+item[0]
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                binaryImage = cropVolumeImage(image,x,y,z,64,64,64)
-            sitk.WriteImage( binaryImage, directory+mriFile )
-            
+    #             # image = sitk.ReadImage(sys.argv[1]+item[0]+mriFile)
+    #             image = sitk.ReadImage(sys.argv[1]+mriFile)
+    #             # directory = "./Output/OnlyEyeRegion/"+item[0]
+    #             directory = "./cropped/"+item[0]
+    #             if not os.path.exists(directory):
+    #                 os.makedirs(directory)
+    #             binaryImage = cropVolumeImage(image,x,y,z,96,96,96)
+    #         sitk.WriteImage( binaryImage, directory+mriFile )
+    #         if (i==10): 
+    #             break
             # if(numpy.isnan(item[4]) == False):
             #     mriFile  = "/T2.nii"
             #     x = item[4]

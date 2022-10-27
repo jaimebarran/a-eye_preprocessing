@@ -1,9 +1,9 @@
 import os
 import dicom2nifti
 
-input_directory = '../../../1_Soenke_Segmentation/DICOM_test/'
-output_directory = '../../../1_Soenke_Segmentation/NIFTI_test/'
-filename = 'T1_code.nii'
+input_directory = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/non_labeled_dataset/'
+output_directory = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/non_labeled_dataset_nifti/'
+filename = 'T1.nii'
 
 # Converting a directory with dicom files to nifti files
 dicom2nifti.convert_directory(input_directory, output_directory)

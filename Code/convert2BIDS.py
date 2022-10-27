@@ -113,22 +113,31 @@ import dicom2nifti
 #     os.system(command)
 
 # Extra 2: a123_BIDs but only with T1 images
-input_dir = '/mnt/sda1/BIDS/sourcedata/'
-output_dir = '/mnt/sda1/a123_BIDS/'
+input_dir = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/non_labeled_dataset/'
+output_dir = '/mnt/sda1/Repos/a-eye/Data/SHIP_dataset/non_labeled_dataset_nifti/'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 # Loop
-for folder1 in os.listdir(input_dir):
-    filename = folder1 + '_T1'
+i=0
+for folder1 in sorted(os.listdir(input_dir)):
+    i+=1
+    filename = folder1
     for folder2 in os.listdir(input_dir+folder1):
+        if i==10: break
         if 't1' in folder2 and not folder2.startswith('.'):
             input_dicom_folder = input_dir+folder1+'/'+folder2
-            output_nifti_folder = output_dir+folder1+'/anat/'
-            os.makedirs(output_nifti_folder)
+            
+            # output
+            output_nifti_folder = output_dir+folder1
+            if not os.path.exists(output_nifti_folder):
+                os.makedirs(output_nifti_folder)
+
+            # dcm2niix
             # dicom2nifti.dicom_series_to_nifti(input_dicom_folder, output_nifti_folder+filename, reorient_nifti=True)
             cmd = ["dcm2niix", "-f", filename, "-z", "y", "-o", output_nifti_folder, input_dicom_folder]
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE)  # pass the list as input to Popen
             _ = process.communicate()[0]  # the [0] is to return just the output, because otherwise it would be outs, errs = proc.communicate()
-
             # Dealing with files in that folder
             # for f in glob.glob(input_dir+folder1+'/anat/'+folder1+'_T1.nii.gz'):
             #     os.remove(f)
