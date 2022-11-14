@@ -448,6 +448,11 @@ data_ndsc = [df5['nDSC_all'],  df5['nDSC_lens'], df5['nDSC_globe'], df5['nDSC_ne
 data_vol = [df5['Volume_all'], df5['Volume_lens'], df5['Volume_globe'], df5['Volume_nerve'], df5['Volume_int_fat'], df5['Volume_ext_fat'], df5['Volume_lat_mus'], df5['Volume_med_mus'], df5['Volume_inf_mus'], df5['Volume_sup_mus']]
 data_haus = [df5['Haus_avg_all'], df5['Haus_avg_lens'], df5['Haus_avg_globe'], df5['Haus_avg_nerve'], df5['Haus_avg_int_fat'], df5['Haus_avg_ext_fat'], df5['Haus_avg_lat_mus'], df5['Haus_avg_med_mus'], df5['Haus_avg_inf_mus'], df5['Haus_avg_sup_mus']]
 
+labels = ['lens', 'globe', 'nerve', 'intraconal fat', 'extraconal fat', 'lateral rectus muscle', 'medial rectus muscle', 'inferior rectus muscle', 'superior rectus muscle']
+median = [np.around(np.median(x), 2) for x in data_dsc]
+for i in range(len(labels)):
+    print(labels[i], median[i])
+
 # Figure 1
 fig, axs = plt.subplots(4, figsize=(20,10), sharex=True)
 fig.canvas.set_window_title('Similarity metrics N=5')
@@ -474,10 +479,10 @@ ax3.set_yticks(np.arange(-2, 2.5, 0.5))
 ax4.set_title('Hausdorff distance')
 ax4.set_yticks(np.arange(0, 1.7, 0.2))
 
-# plt.show()
+plt.show()
 
 # Save figure
-plt.savefig(path + filename, bbox_inches='tight')
+# plt.savefig(path + filename, bbox_inches='tight')
 
 # '''
 
