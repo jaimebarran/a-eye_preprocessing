@@ -8,7 +8,8 @@ import numpy as np
 import glob, os
 
 # base_dir = '/mnt/sda1/ANTs/a123/'
-base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # for the custom template
+# base_dir = '/mnt/sda1/Repos/a-eye/a-eye_preprocessing/ANTs/a123/' # for the custom template
+base_dir = '/mnt/sda1/Repos/a-eye/a-eye_segmentation/atlas_registration/ANTs/a123/'
 
 # Allign origin to create custom template
 # segments = nb.load(base_dir+'sub-29/input/sub-29_labels.nii.gz')
