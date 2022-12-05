@@ -24,6 +24,7 @@ for folder1 in os.listdir(base_dir):
     # segments = nb.load(base_dir+folder1+'/input/'+folder1+'_labels.nii.gz')
     # header = segments.header.copy()
     # header.set_data_dtype("uint8")
+    t1_labels = nb.load(base_dir+folder1+'/input/'+folder1+'_labels.nii.gz')
 
     # nii = nb.Nifti1Image(t1.dataobj, segments.affine, header)
     # # nii.to_filename("/mnt/sda1/ANTs/a123/sub-01/input/sub-01_T1_test.nii.gz")
@@ -33,10 +34,12 @@ for folder1 in os.listdir(base_dir):
     # nii = nb.Nifti1Image(t1.dataobj, t1.affine, t1.header)
     # nii.set_sform(t1.affine, code=0)
     # nii.set_qform(t1.affine, code=1)
-    print(t1.affine)
+    # print(t1.affine)
     nii = nb.Nifti1Image(t1.dataobj, t1_aux.affine, t1.header)
+    nii_labels = nb.Nifti1Image(t1_labels.dataobj, t1_aux.affine, t1_labels.header)
     print(t1.affine)
     # nii.to_filename(base_dir+folder1+'/input/'+folder1+'_T1_aff.nii.gz')
+    nii_labels.to_filename(base_dir+folder1+'/input/'+folder1+'_labels_aff.nii.gz')
     
     # Dealing with files in that folder
     # for f in glob.glob(base_dir+folder1+'/input/'+folder1+'_T1_oriented_hdr.nii.gz'):
