@@ -131,4 +131,5 @@ dmypy.json
 # Custom folders/files to ignore
 ANTs/
 Output/
+MRI-QC/
 .vscode/launch.json
