@@ -66,32 +66,3 @@ exit
 cp /mnt/sda1/1_Soenke_Segmentation/all_segments.nii.gz .
 
 cp /mnt/sda1/1_Soenke_Segmentation/NIFTI/T1.nii.gz .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
