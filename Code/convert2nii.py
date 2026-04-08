@@ -18,10 +18,13 @@ for folder1 in os.listdir(input_directory):
             output_nifti_folder = output_directory+folder1+'/input/'
             # print(output_nifti_folder)
             # os.makedirs(output_nifti_folder)
+            
             # Converting a directory with dicom files to nifti files
             # dicom2nifti.convert_directory(input_dicom_folder, output_nifti_folder+filename)
+            
             # Converting a directory with only 1 series to 1 nifti file
             dicom2nifti.dicom_series_to_nifti(input_dicom_folder, output_nifti_folder+filename, reorient_nifti=True)
+            
             # cmd = ["dcm2niix", "-f", filename, "-z", "y", "-o", output_nifti_folder, input_dicom_folder]
             # process = subprocess.Popen(cmd, stdout=subprocess.PIPE)  # pass the list as input to Popen
             # _ = process.communicate()[0]  # the [0] is to return just the output, because otherwise it would be outs, errs = proc.communicate()
